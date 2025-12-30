@@ -1,19 +1,15 @@
 import { IntervallHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
-import { SoundHub } from "../soundhub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
-export class Chicken extends MovableObject{
-    y = 360;
-    width = 70;
-    height = 55;
+export class ChickenSmall extends MovableObject{
+    y = 370;
+    width = 45;
+    height = 45;
     
     // Image Hub
-    CHICKEN_WALK = ImageHub.chicken_normal.walk;
-    CHICKEN_DEAD = ImageHub.chicken_normal.dead;
-
-    // Sound Hub
-    SOUND_DEAD = SoundHub.chicken.dead;
+    CHICKEN_WALK = ImageHub.chicken_small.walk;
+    CHICKEN_DEAD = ImageHub.chicken_small.dead;
 
     constructor(){
         super();

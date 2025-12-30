@@ -1,5 +1,4 @@
-import {MovableObject} from "./movable-object.class.js";
-import {ImageHub} from "../imagehub.class.js";
+import { MovableObject } from "./movable-object.class.js";
 
 export class BackgroundObject extends MovableObject{
     width = 720;

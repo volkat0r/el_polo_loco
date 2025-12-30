@@ -1,6 +1,7 @@
-import {MovableObject} from "./movable-object.class.js";
-import {IntervallHub} from "../intervalhub.class.js";
-import {ImageHub} from "../imagehub.class.js";
+import { IntervallHub } from "../intervalhub.class.js";
+import { ImageHub } from "../imagehub.class.js";
+import { SoundHub } from "../soundhub.class.js";
+import { MovableObject } from "./movable-object.class.js";
 
 export class Character extends MovableObject{
     x = 100;
@@ -9,6 +10,7 @@ export class Character extends MovableObject{
     height = 300;
     speed = 4;
     world;
+    lastHit = 0;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -17,20 +19,24 @@ export class Character extends MovableObject{
     IMAGES_JUMP = ImageHub.character.jump;
     IMAGES_HURT = ImageHub.character.hurt;
     IMAGES_DEAD = ImageHub.character.dead;
+    // Sound Hub
+    SOUND_WALK = SoundHub.character.walk;
+    SOUND_JUMP = SoundHub.character.jump;
+    SOUND_IDLE = SoundHub.character.idle;
+    SOUND_HURT = SoundHub.character.hurt;
+    SOUND_DEAD = SoundHub.character.dead;
 
     constructor(){
         super();
         this.showFrame = true;
         this.showOffsetFrame = true;
-        this.loadImage(this.IMAGES_IDLE[0]);
+        this.loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_JUMP);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        // this.playAnimation(this.IMAGES_WALK);
         this.animate();
-        // IntervallHub.startInterval(this.applyGravity, 1000 / 25);
         this.applyGravity();
 
         this.offset = {
@@ -49,13 +55,19 @@ export class Character extends MovableObject{
 
     selectAnimation = () => {
         if(this.isAboveGround()) {
-            // JUMP Animation
+            // Jump Animation
             this.playAnimation(this.IMAGES_JUMP);
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             this.x += this.speed;
             // Walk Animation
             this.playAnimation(this.IMAGES_WALK);
-        }
+        } else if (this.isHurt()) {
+            // Hurt Animation
+            this.playAnimation(this.IMAGES_HURT);
+        } else if (this.isDead()) {
+            // Dead Animation
+            this.playAnimation(this.IMAGES_DEAD);
+        };
     }
 
     inputCheck = () => {
@@ -69,13 +81,25 @@ export class Character extends MovableObject{
         if (this.world.keyboard.UP && !this.isAboveGround()){
             this.jump();
         }
-        this.world.camera_x = -this.x +75;
+        this.world.camera_x = -this.x + 75;
     }
 
     hit(enemy) {
-        if (this.energy <= 0) return;
+        this.energy -= 5;
+        if (this.energy < 0) {
+            this.energy = 0;
+        } else {
+            this.lastHit = new Date().getTime(); // gets time in ms (since 1970)
+        }
+    }
 
-        this.energy -= 10;
-        console.log('Character hit, energy:', this.energy);
+    isHurt(){
+        let timepassed = new Date() - this.lastHit; // difference of actual- & lastHit-time
+        timepassed = timepassed / 100; // recalculate in seconds
+        return timepassed < 0.5; // return if 5 seconds are passed
+    }
+
+    isDead(){
+        return this.energy == 0;
     }
 }

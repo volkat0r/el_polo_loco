@@ -1,6 +1,8 @@
-import {MovableObject} from "./movable-object.class.js";
-import {ImageHub} from "../imagehub.class.js";
-import {IntervallHub} from "../intervalhub.class.js";
+import { IntervallHub } from "../intervalhub.class.js";
+import { ImageHub } from "../imagehub.class.js";
+import { SoundHub } from "../soundhub.class.js";
+import { MovableObject } from "./movable-object.class.js";
+
 
 export class Endboss extends MovableObject{
     x = 700;
@@ -8,12 +10,14 @@ export class Endboss extends MovableObject{
     width = 304;
     height = 261;
 
-    // Img Src
+    // Image Hub
     ENDBOSS_WALK = ImageHub.end_boss.walk;
     ENDBOSS_ALERT = ImageHub.end_boss.alert;
     ENDBOSS_ATTACK = ImageHub.end_boss.attack;
     ENDBOSS_HURT = ImageHub.end_boss.hurt;
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
+    // Sound Hub
+    SOUND_ENTRY = SoundHub.endboss.entry;
 
     constructor(){
         super();
@@ -44,5 +48,4 @@ export class Endboss extends MovableObject{
         this.img = this.imageCache[path];
         this.currentImage++;
     }
-
 }

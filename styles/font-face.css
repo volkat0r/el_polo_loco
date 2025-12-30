@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Mexicana';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Mexicana'), url('../assets/fonts/Mexicana.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Mexicana Hollow';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Mexicana Hollow'), url('../assets/fonts/MexicanaHollow.woff2') format('woff2');
+}
+
+@font-face {
+    font-family: 'Chimichanga';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Chimichanga'), url('../assets/fonts/JI\ Chimichanga.woff2') format('woff2');
+}

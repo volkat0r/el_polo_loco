@@ -1,4 +1,4 @@
-export class ImageHub{
+export class ImageHub {
     static character = {
         idle:[
             "./assets/img/2_character_pepe/1_idle/idle/I-1.png",
@@ -133,7 +133,7 @@ export class ImageHub{
         ],
         clouds: [
             "./assets/img/5_background/layers/4_clouds/1.png",
-            "./assets/img/55_background/layers/4_clouds/2.png",
+            "./assets/img/5_background/layers/4_clouds/2.png"
         ],
     };
 
@@ -151,10 +151,41 @@ export class ImageHub{
             "./assets/img/6_salsa_bottle/bottle_rotation/2_bottle_rotation.png",
             "./assets/img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
             "./assets/img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"
+        ],
+        bottle_on_ground: "./assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png"
+    };
+
+    static coin = {
+        coin:[
+            "./assets/img/8_coin/coin_1.png",
+            "./assets/img/8_coin/coin_2.png"
         ]
     };
 
-    constructor(){
-
-    }
+    static status_bar = {
+        status_health:[
+            "./assets/img/7_statusbars/1_statusbar/2_statusbar_health/green/0.png",
+            "./assets/img/7_statusbars/1_statusbar/2_statusbar_health/green/20.png",
+            "./assets/img/7_statusbars/1_statusbar/2_statusbar_health/green/40.png",
+            "./assets/img/7_statusbars/1_statusbar/2_statusbar_health/green/60.png",
+            "./assets/img/7_statusbars/1_statusbar/2_statusbar_health/green/80.png",
+            "./assets/img/7_statusbars/1_statusbar/2_statusbar_health/green/100.png"
+        ],
+        status_coin:[
+            "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/0.png",
+            "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/20.png",
+            "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/40.png",
+            "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/60.png",
+            "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/80.png",
+            "./assets/img/7_statusbars/1_statusbar/1_statusbar_coin/blue/100.png"
+        ],
+        status_bottle:[
+            "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/0.png",
+            "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/20.png",
+            "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/40.png",
+            "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/60.png",
+            "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/80.png",
+            "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png"
+        ]
+    };
 }

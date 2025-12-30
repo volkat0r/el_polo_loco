@@ -1,12 +1,7 @@
-import {IntervallHub} from "../intervalhub.class.js";
+import { IntervallHub } from "../intervalhub.class.js";
+import { DrawableObject } from "./drawable-object.class.js";
 
-export class MovableObject {
-    x = 120;
-    y = 280;
-    width = 100;
-    height = 150;
-    img;
-    imageCache = {};
+export class MovableObject extends DrawableObject{
     currentImage = 0;
     speed = 0.15;
     otherDirection = false;
@@ -43,34 +38,6 @@ export class MovableObject {
 
     draw(ctx){
         ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-    }
-
-    drawFrame(ctx) {
-        if (!this.showFrame) return;
-
-        ctx.beginPath();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = 'blue';
-        ctx.rect(this.x, this.y, this.width, this.height);
-        ctx.stroke();
-    }
-
-    drawOffsetFrame(ctx) {
-        if (!this.showOffsetFrame) return;
-
-        ctx.beginPath();
-        ctx.lineWidth = 3;
-        ctx.strokeStyle = 'red';
-        ctx.rect(this.x + this.offset.left, this.y + this.offset.top, this.width - this.offset.left - this.offset.right, this.height - this.offset.top - this.offset.bottom);
-        ctx.stroke();
-    }
-
-    loadImages(imageArray) {
-        imageArray.forEach((path) => {
-            const img = new Image();
-            img.src = path;
-            this.imageCache[path] = img;
-        });
     }
 
     playAnimation(images){
