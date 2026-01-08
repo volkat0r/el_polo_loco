@@ -1,9 +1,11 @@
-import { Cloud } from "../models/cloud.class.js";
 import { Chicken } from "../models/chicken.class.js";
-import { BackgroundObject } from "../models/background-object.class.js";
-import { Level } from "../models/level.class.js";
-import { Endboss } from "../models/endboss.class.js";
 import { ChickenSmall } from "../models/chicken-small.class.js";
+import { Endboss } from "../models/endboss.class.js";
+import { Coins } from "../models/coin.class.js";
+import { Bottles } from "../models/bottle.class.js";
+import { Level } from "../models/level.class.js";
+import { Cloud } from "../models/cloud.class.js";
+import { BackgroundObject } from "../models/background-object.class.js";
 
 export let level1;
 
@@ -18,7 +20,36 @@ level1 = new Level(
         new Chicken()
     ],
     [
+        new Cloud(),
+        new Cloud(),
+        new Cloud(),
+        new Cloud(),
+        new Cloud(),
         new Cloud()
+    ],
+    [
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins(),
+        new Coins()
+    ],
+    [
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
+        new Bottles(),
     ],
     [
         new BackgroundObject('./assets/img/5_background/layers/air.png', -719),

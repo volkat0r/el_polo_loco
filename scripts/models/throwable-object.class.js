@@ -1,4 +1,4 @@
-import { IntervallHub } from "../intervalhub.class.js";
+import { IntervalHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
@@ -12,7 +12,7 @@ export class ThrowableObject extends MovableObject {
         super();
         this.showFrame = true;
         this.showOffsetFrame = true;
-        this.loadImage(this.BOTTLE_ON_GROUND);
+        this.loadImage(this.BOTTEL_ROTATION[0]);
         this.x = x;
         this.y = y;
         this.width = 80;
@@ -29,13 +29,14 @@ export class ThrowableObject extends MovableObject {
     }
 
     animate(){
-        IntervallHub.startInterval(this.throwBottle, 1000 / 25);
+        IntervalHub.startInterval(this.throwBottle, 1000 / 25);
     }
 
     throw(){
         this.speedY = 30;
         this.applyGravity();
     }
+
     throwBottle = () => {
         this.x += 10;
     }
@@ -43,5 +44,4 @@ export class ThrowableObject extends MovableObject {
     isAboveGround(){
         return true;
     }
-
 }

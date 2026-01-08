@@ -1,11 +1,10 @@
-import { IntervallHub } from "../intervalhub.class.js";
+import { IntervalHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
 import { SoundHub } from "../soundhub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
-
 export class Endboss extends MovableObject{
-    x = 700;
+    x = 2000;
     y = 180;
     width = 304;
     height = 261;
@@ -23,11 +22,12 @@ export class Endboss extends MovableObject{
         super();
         this.showFrame = true;
         this.showOffsetFrame = true;
-        this.loadImage(this.ENDBOSS_ALERT[0]);
-        this.x = 700;
+        this.loadImage(this.ENDBOSS_WALK[0]);
+        this.x = 2000;
         this.speed = 0.15 + Math.random() * 1;
-        this.loadImages(this.ENDBOSS_ALERT);
+        this.loadImages(this.ENDBOSS_WALK);
         this.animate();
+        this.moveLeft();
 
         this.offset = {
             left: 10,
@@ -37,14 +37,13 @@ export class Endboss extends MovableObject{
         };
     }
 
-
     animate(){
-        IntervallHub.startInterval(this.selectAnimation, 400);
+        IntervalHub.startInterval(this.selectAnimation, 400);
     }
     
     selectAnimation = () => {
-        const index = this.currentImage % this.ENDBOSS_ALERT.length;
-        let path = this.ENDBOSS_ALERT[index];
+        const index = this.currentImage % this.ENDBOSS_WALK.length;
+        let path = this.ENDBOSS_WALK[index];
         this.img = this.imageCache[path];
         this.currentImage++;
     }

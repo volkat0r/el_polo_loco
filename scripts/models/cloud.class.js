@@ -1,4 +1,4 @@
-import { IntervallHub } from "../intervalhub.class.js";
+import { IntervalHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
@@ -13,13 +13,13 @@ export class Cloud extends MovableObject{
 
     constructor(){
         super();
-        this.loadImage(this.CLOUD[0]);
-        this.loadImage(this.CLOUD[1]);
-        this.x = Math.random() * 300;
+        this.loadImage(this.CLOUD[0], this.CLOUD[1]);
+        this.x = Math.random() * 2400;
         this.animate();
     }
 
     animate(){
-        IntervallHub.startInterval(this.moveLeft, 1000 / 60);
+        IntervalHub.startInterval(this.moveLeft, 1000 / 60);
     }
+
 }

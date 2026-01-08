@@ -1,4 +1,4 @@
-import { IntervallHub } from "../intervalhub.class.js";
+import { IntervalHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
 import { SoundHub } from "../soundhub.class.js";
 import { MovableObject } from "./movable-object.class.js";
@@ -10,6 +10,7 @@ export class Character extends MovableObject{
     height = 300;
     speed = 4;
     world;
+    lastMove = 100;
     lastHit = 0;
 
     // Image Hub
@@ -19,6 +20,7 @@ export class Character extends MovableObject{
     IMAGES_JUMP = ImageHub.character.jump;
     IMAGES_HURT = ImageHub.character.hurt;
     IMAGES_DEAD = ImageHub.character.dead;
+
     // Sound Hub
     SOUND_WALK = SoundHub.character.walk;
     SOUND_JUMP = SoundHub.character.jump;
@@ -49,8 +51,8 @@ export class Character extends MovableObject{
     }
 
     animate(){
-        IntervallHub.startInterval(this.inputCheck, 1000 / 120);
-        IntervallHub.startInterval(this.selectAnimation, 1000 / 20);
+        IntervalHub.startInterval(this.inputCheck, 1000 / 120);
+        IntervalHub.startInterval(this.selectAnimation, 1000 / 20);
     }
 
     selectAnimation = () => {
@@ -58,7 +60,6 @@ export class Character extends MovableObject{
             // Jump Animation
             this.playAnimation(this.IMAGES_JUMP);
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-            this.x += this.speed;
             // Walk Animation
             this.playAnimation(this.IMAGES_WALK);
         } else if (this.isHurt()) {
@@ -67,6 +68,9 @@ export class Character extends MovableObject{
         } else if (this.isDead()) {
             // Dead Animation
             this.playAnimation(this.IMAGES_DEAD);
+        } else if (this.fallAsleep()){
+            // Sleep Animation
+            this.playAnimation(this.IMAGES_IDLE);
         };
     }
 
@@ -81,7 +85,16 @@ export class Character extends MovableObject{
         if (this.world.keyboard.UP && !this.isAboveGround()){
             this.jump();
         }
-        this.world.camera_x = -this.x + 75;
+    }
+
+    getLastMove(){
+        this.lastMove = new Date().getTime();
+    }
+
+    fallAsleep(){
+        let time = new Date().getTime() - this.lastMove;
+        time = time / 1000;
+        
     }
 
     hit(enemy) {
@@ -89,7 +102,7 @@ export class Character extends MovableObject{
         if (this.energy < 0) {
             this.energy = 0;
         } else {
-            this.lastHit = new Date().getTime(); // gets time in ms (since 1970)
+            this.lastHit = new Date().getTime();
         }
     }
 

@@ -21,4 +21,16 @@ export class SoundHub {
     static throwable = {
         sound: "./assets/sounds/throwable/bottleBreak.mp3"
     }
+
+    static muteAll() {
+        SoundHub.allSounds.forEach(sound => {
+            sound.volume = 0; 
+        });
+    }
+
+    static stopAll() {
+        SoundHub.allSounds.forEach(sound => {
+            sound.pause();
+        });
+    }
 }

@@ -66,7 +66,7 @@ export class ImageHub {
             "./assets/img/3_enemies_chicken/chicken_normal/1_walk/3_w.png"
         ],
         dead: [
-            "./assets/img/3_enemies_chicken/chicken_normal/2_dead/dead"
+            "./assets/img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
         ]
     };
 
@@ -77,7 +77,7 @@ export class ImageHub {
             "./assets/img/3_enemies_chicken/chicken_small/1_walk/3_w.png"
         ],
         dead: [
-            "./assets/img/3_enemies_chicken/chicken_normal/2_dead/dead"
+            "./assets/img/3_enemies_chicken/chicken_small/2_dead/dead.png"
         ]
     };
 
@@ -152,7 +152,10 @@ export class ImageHub {
             "./assets/img/6_salsa_bottle/bottle_rotation/3_bottle_rotation.png",
             "./assets/img/6_salsa_bottle/bottle_rotation/4_bottle_rotation.png"
         ],
-        bottle_on_ground: "./assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png"
+        bottle_on_ground: [
+            "./assets/img/6_salsa_bottle/1_salsa_bottle_on_ground.png",
+            "./assets/img/6_salsa_bottle/2_salsa_bottle_on_ground.png"
+        ]
     };
 
     static coin = {
@@ -186,6 +189,14 @@ export class ImageHub {
             "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/60.png",
             "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/80.png",
             "./assets/img/7_statusbars/1_statusbar/3_statusbar_bottle/orange/100.png"
+        ],
+        status_endboss:[
+            "./assets/img/7_statusbars/2_statusbar_endboss/green/green0.png",
+            "./assets/img/7_statusbars/2_statusbar_endboss/green/green20.png",
+            "./assets/img/7_statusbars/2_statusbar_endboss/green/green40.png",
+            "./assets/img/7_statusbars/2_statusbar_endboss/green/green60.png",
+            "./assets/img/7_statusbars/2_statusbar_endboss/green/green80.png",
+            "./assets/img/7_statusbars/2_statusbar_endboss/green/green100.png"
         ]
     };
 }

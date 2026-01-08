@@ -1,4 +1,4 @@
-import { IntervallHub } from "../intervalhub.class.js";
+import { IntervalHub } from "../intervalhub.class.js";
 import { DrawableObject } from "./drawable-object.class.js";
 
 export class MovableObject extends DrawableObject{
@@ -17,7 +17,7 @@ export class MovableObject extends DrawableObject{
     };
 
     applyGravity(){
-        IntervallHub.startInterval(this.gravityInterval, 1000 / 25);
+        IntervalHub.startInterval(this.gravityInterval, 1000 / 25);
     }
 
     gravityInterval = () => {
@@ -49,7 +49,9 @@ export class MovableObject extends DrawableObject{
 
     moveRight = () => {
         this.otherDirection = false;
-        this.x += this.speed;
+        if (this.x < this.world.level.level_end_x) {
+            this.x += this.speed;
+        }
     };
 
     moveLeft = () => {
@@ -58,6 +60,10 @@ export class MovableObject extends DrawableObject{
     
     jump = () =>{
         this.speedY = 25;
+    }
+
+    isJumpable() {
+        return false;
     }
 
     /* MovableObject - Collition Calculation */
@@ -75,40 +81,5 @@ export class MovableObject extends DrawableObject{
                 this.x + this.offset.left < mo.x + mo.width - mo.offset.right && // L > R
                 this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom // B > T
     };
-
-    /* Try to add intervalHub here RETRY!
-        moveLeft(){
-            IntervallHub.startInterval(this.selectAnimation, 1000 / 20);
-        }
-        selectAnimation = () => {
-            this.x -= this.speed;
-        }
-        
-        _____________________
-
-
-        applyGravity(){
-            setInterval(() => {
-                if (this.y < 180) {
-                    this.y -= this.speedY;
-                    this.speedY -= this.acceleration;
-                }
-            }, 1000 / 60);
-        }
-        
-        =
-
-        applyGravity(){
-            IntervallHub.startInterval(this.gravityInterval, 1000 / 60);
-        }
-        gravityInterval(){
-            if (this.y < 180) {
-                this.y -= this.speedY;
-                this.speedY -= this.acceleration;
-            }
-        }
-
-
-    */
 
 }

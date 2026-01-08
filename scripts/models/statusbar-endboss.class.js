@@ -1,18 +1,16 @@
 import { ImageHub } from "../imagehub.class.js";
 import { DrawableObject } from "./drawable-object.class.js";
 
-
-
-export class StatusBar extends DrawableObject{
+export class StatusBarEndboss extends DrawableObject{
     percentage = 100;
     imageCache = {};
 
     // Image Hub
-    IMAGES_STATUS_HEALTH = ImageHub.status_bar.status_health;
+    IMAGES_STATUS_ENDBOSS = ImageHub.status_bar.status_endboss;
 
     constructor(){
         super();
-        this.loadImages(this.IMAGES_STATUS_HEALTH);
+        this.loadImages(this.IMAGES_STATUS_ENDBOSS);
         this.x = 20;
         this.y = 0;
         this.width = 200;
@@ -22,10 +20,9 @@ export class StatusBar extends DrawableObject{
     
     setPercentage(percentage){
         this.percentage = percentage;
-        let path = this.IMAGES_STATUS_HEALTH[this.resolveImageIndex()];
+        let path = this.IMAGES_STATUS_ENDBOSS[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
-
 
     resolveImageIndex() {
         if (this.percentage == 100){

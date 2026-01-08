@@ -19,7 +19,6 @@ function init(){
     window.keyboard = keyboard;
 }
 
-
 // Keyboard Event-Listener
 window.addEventListener('keydown', (event) => {
     if (event.code === "ArrowRight" || event.code === "KeyD") keyboard.RIGHT = true;
