@@ -1,4 +1,6 @@
 export class SoundHub {
+    static isMuted = false;
+
     static character = {
         walk: "./assets/sounds/character/characterRun.mp3",
         jump: "./assets/sounds/character/characterJump.wav",
@@ -22,14 +24,47 @@ export class SoundHub {
         sound: "./assets/sounds/throwable/bottleBreak.mp3"
     }
 
+    static Sounds = [
+        SoundHub.character.walk,
+        SoundHub.character.jump,
+        SoundHub.character.idle,
+        SoundHub.character.hurt,
+        SoundHub.character.dead,
+        SoundHub.chicken.dead,
+        SoundHub.endboss.entry,
+        SoundHub.collect.sound,
+        SoundHub.collect.gameStart,
+        SoundHub.throwable.sound
+    ];
+
+    static playSingle(sound) {
+        if (!this.isMuted) {
+            sound.volume = 0.2;
+            sound.currentTime = 0;
+            sound.play();
+        }
+    }
+
+    static stopSingle(sound){
+        sound.pause();
+    }
+
     static muteAll() {
-        SoundHub.allSounds.forEach(sound => {
+        SoundHub.isMuted = true;
+        SoundHub.Sounds.forEach((sound) => {
             sound.volume = 0; 
         });
     }
 
+    static unMuteAll() {
+        SoundHub.isMuted = true;
+        SoundHub.Sounds.forEach((sound) => {
+            sound.volume = 0.2; 
+        });
+    }
+
     static stopAll() {
-        SoundHub.allSounds.forEach(sound => {
+        SoundHub.Sounds.forEach((sound) => {
             sound.pause();
         });
     }

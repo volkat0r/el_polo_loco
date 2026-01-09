@@ -62,6 +62,7 @@ export class Character extends MovableObject{
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             // Walk Animation
             this.playAnimation(this.IMAGES_WALK);
+            // SoundHub.play(this.SOUND_WALK);
         } else if (this.isHurt()) {
             // Hurt Animation
             this.playAnimation(this.IMAGES_HURT);

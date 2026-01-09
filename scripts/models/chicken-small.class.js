@@ -19,7 +19,7 @@ export class ChickenSmall extends MovableObject{
         this.loadImage(this.CHICKEN_WALK[0]);
         this.loadImages(this.CHICKEN_WALK);
         this.loadImages(this.CHICKEN_DEAD);
-        this.x = 200 + Math.random() * 500;
+        this.x = 200 + Math.random() * 1100;
         this.speed = 0.15 + Math.random() * 1;
         this.animate();
         this.offset = {left: 0, right: 0, top: 0, bottom: 0};
@@ -49,18 +49,12 @@ export class ChickenSmall extends MovableObject{
         this.isDying = true;
         this.speed = 0;
 
-        // this.SOUND_DEAD?.play();
-
         IntervalHub.startTimeout(() => {
             this.markedForRemoval = true;
-        }, 500);
+        }, 60);
     }
 
     isDead() {
         return this.energy === 0;
-    }
-
-    isJumpable() {
-        return true;
     }
 }

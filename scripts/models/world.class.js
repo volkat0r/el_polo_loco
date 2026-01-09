@@ -9,12 +9,7 @@ import { ThrowableObject } from "./throwable-object.class.js";
 export class World{
     ctx;
     keyboard;
-    backgroundObjects = level1.backgroundObjects;
     level = level1;
-    enemies = level1.enemies;
-    coin = level1.coin;
-    bottle = level1.bottle;
-    clouds = level1.clouds;
     coinCollected = 0;
     bottlesCollected = 0;
     character = new Character();
@@ -23,6 +18,7 @@ export class World{
     StatusBarCoins = new StatusBarCoins();
     throwableObjects = [new ThrowableObject()];
     camera_x = 0;
+    throwReady;
 
 
     constructor(canvas, keyboard){
@@ -39,7 +35,7 @@ export class World{
     }
 
     play(){
-        IntervalHub.startInterval(this.checkCollision, 1000 / 60);
+        IntervalHub.startInterval(this.checkCollision, 1000 / 10);
         IntervalHub.startInterval(this.checkThrowObjects, 60);
         IntervalHub.startInterval(this.checkCoinCollection, 60);
         IntervalHub.startInterval(this.checkBottleCollection, 60);
@@ -48,14 +44,12 @@ export class World{
     
     checkCollision = () => {
         this.level.enemies.forEach(enemy => {
-            if (enemy.isDying || enemy.isDead?.()) return;
             if (!this.character.isCollidingOffset(enemy)) return;
-
-            const characterBottom = this.character.y + this.character.height;
-            const isJumpAttack = enemy.isJumpable?.() && this.character.speedY < 0 && characterBottom < enemy.y + enemy.height / 2;
-            if (isJumpAttack) {
-                enemy.dead();
-                this.character.speedY = 15;
+            if (this.character.isCollidingOffset(enemy) && this.character.isAboveGround()){
+                if (this.character.speedY < 0){
+                    enemy.dead();
+                    this.character.speedY = 15;
+                }
             } else {
                 this.character.hit(enemy);
                 this.StatusBarHealth.setPercentage(this.character.energy);
@@ -66,14 +60,21 @@ export class World{
         );
     };
 
-    checkThrowObjects = () => {
+    checkCollisionEndBoss = () => {
+        
+    }
 
-        if (!this.bottlesCollected <= 4){
-            if (this.keyboard.THROW){
-                this.bottlesCollected--;
-                let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100);
-                this.throwableObjects.push(bottle);
-            }
+    checkThrowObjects = () => {
+        if (this.keyboard.THROW && this.bottlesCollected > 0){
+            let bottle = new ThrowableObject(this.character.x + 100, this.character.y + 100, this.character.otherDirection);
+            this.throwableObjects.push(bottle);
+
+            // healthbar & amount bottles
+            this.bottlesCollected--;
+            this.throwReady = false;
+            console.log("bottle " + this.bottlesCollected);
+            
+            // IntervalHub.startTimeout(() => {this.throwReady = true;}, 1000);
         }
     }
 
@@ -86,7 +87,7 @@ export class World{
             }
         });
         // collected 5 coins full healthbar
-        console.log("coins" + this.coinCollected);
+        // console.log("coins" + this.coinCollected);
 
         this.level.coins = this.level.coins.filter(
             coin => !coin.markedForRemoval
@@ -94,7 +95,7 @@ export class World{
     }
 
     checkBottleCollection = () => {
-        if (this.bottlesCollected <= 5){
+        if (this.bottlesCollected <= 4){
             this.level.bottles.forEach((bottle) => {
                 if (this.character.isCollidingOffset(bottle)) {
                     this.bottlesCollected++,
@@ -103,7 +104,6 @@ export class World{
                 }
             });
         }
-        console.log("bottles " + this.bottlesCollected);
 
         this.level.bottles = this.level.bottles.filter(
             bottle => !bottle.markedForRemoval

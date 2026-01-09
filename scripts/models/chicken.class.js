@@ -6,8 +6,7 @@ import { MovableObject } from "./movable-object.class.js";
 export class Chicken extends MovableObject{
     y = 360;
     width = 70;
-    height = 55;
-    energy = 1;
+    height = 55;a
     isDying = false;
     
     // Image Hub
@@ -24,7 +23,7 @@ export class Chicken extends MovableObject{
         this.loadImage(this.CHICKEN_WALK[0]);
         this.loadImages(this.CHICKEN_WALK);
         this.loadImages(this.CHICKEN_DEAD);
-        this.x = 200 + Math.random() * 500;
+        this.x = 200 + Math.random() * 1100;
         this.speed = 0.15 + Math.random() * 1;
         this.animate();
         this.offset = {left: 0, right: 0, top: 0, bottom: 0};
@@ -54,16 +53,18 @@ export class Chicken extends MovableObject{
         this.isDying = true;
         this.speed = 0;
 
+        // this.deathSound();
+        SoundHub.playOne(this.hurtSound);
         IntervalHub.startTimeout(() => {
             this.markedForRemoval = true;
-        }, 500);
+        }, 60);
+    }
+
+    deathSound() {
+        SoundHub.play(SoundHub.chicken.dead);
     }
 
     isDead() {
         return this.energy === 0;
-    }
-
-    isJumpable() {
-        return true;
     }
 }
