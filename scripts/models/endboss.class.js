@@ -1,50 +1,54 @@
 import { IntervalHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
-import { SoundHub } from "../soundhub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
-export class Endboss extends MovableObject{
-    x = 2000;
+export class Endboss extends MovableObject {
+    x = 2200;
     y = 180;
     width = 304;
     height = 261;
 
-    // Image Hub
+    isEndboss = true;
+    energy = 100;
+    isDying = false;
+
     ENDBOSS_WALK = ImageHub.end_boss.walk;
-    ENDBOSS_ALERT = ImageHub.end_boss.alert;
-    ENDBOSS_ATTACK = ImageHub.end_boss.attack;
-    ENDBOSS_HURT = ImageHub.end_boss.hurt;
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
-    // Sound Hub
-    SOUND_ENTRY = SoundHub.endboss.entry;
 
-    constructor(){
+    constructor() {
         super();
-        this.showFrame = true;
-        this.showOffsetFrame = true;
         this.loadImage(this.ENDBOSS_WALK[0]);
-        this.x = 2000;
-        this.speed = 0.15 + Math.random() * 1;
         this.loadImages(this.ENDBOSS_WALK);
+        this.loadImages(this.ENDBOSS_DEAD);
+
+        this.speed = 0.15;
         this.animate();
-        this.moveLeft();
-
-        this.offset = {
-            left: 10,
-            right: 10,
-            top: 30,
-            bottom: 15
-        };
     }
 
-    animate(){
-        IntervalHub.startInterval(this.selectAnimation, 400);
+    hit(damage = 20) {
+        if (this.isDying) return;
+
+        this.energy -= damage;
+        if (this.energy <= 0) {
+            this.energy = 0;
+            this.dead();
+        }
     }
-    
-    selectAnimation = () => {
-        const index = this.currentImage % this.ENDBOSS_WALK.length;
-        let path = this.ENDBOSS_WALK[index];
-        this.img = this.imageCache[path];
-        this.currentImage++;
+
+    dead() {
+        this.isDying = true;
+        this.playAnimation(this.ENDBOSS_DEAD);
+
+        setTimeout(() => {
+            this.markedForRemoval = true;
+        }, 1000);
+    }
+
+    animate() {
+        IntervalHub.startInterval(() => {
+            if (this.isDying) return;
+            this.playAnimation(this.ENDBOSS_WALK);
+            this.moveLeft();
+        }, 200);
     }
 }

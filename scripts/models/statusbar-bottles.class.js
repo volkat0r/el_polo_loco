@@ -30,6 +30,12 @@ export class StatusBarBottles extends DrawableObject{
         this.setPercentage(this.percentage);
     }
 
+    throwBottle() {
+        this.percentage -= 20;
+        this.percentage = Math.min(100, this.percentage);
+        this.setPercentage(this.percentage);
+    }
+
     resolveImageIndex() {
         if (this.percentage == 100) return 5;
         if (this.percentage > 80) return 4;

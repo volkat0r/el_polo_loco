@@ -95,7 +95,6 @@ export class Character extends MovableObject{
     fallAsleep(){
         let time = new Date().getTime() - this.lastMove;
         time = time / 1000;
-        
     }
 
     hit(enemy) {

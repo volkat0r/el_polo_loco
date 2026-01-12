@@ -53,8 +53,7 @@ export class Chicken extends MovableObject{
         this.isDying = true;
         this.speed = 0;
 
-        // this.deathSound();
-        SoundHub.playOne(this.hurtSound);
+        // SoundHub.playOne(SoundHub.chicken.dead);
         IntervalHub.startTimeout(() => {
             this.markedForRemoval = true;
         }, 60);

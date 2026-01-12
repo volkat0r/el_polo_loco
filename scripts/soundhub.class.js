@@ -37,7 +37,7 @@ export class SoundHub {
         SoundHub.throwable.sound
     ];
 
-    static playSingle(sound) {
+    static playOne(sound) {
         if (!this.isMuted) {
             sound.volume = 0.2;
             sound.currentTime = 0;
