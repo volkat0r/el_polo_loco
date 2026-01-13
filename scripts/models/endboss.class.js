@@ -3,26 +3,47 @@ import { ImageHub } from "../imagehub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
 export class Endboss extends MovableObject {
-    x = 2200;
-    y = 180;
-    width = 304;
-    height = 261;
+    x = 2500;
+    y = 60;
+    width = 250;
+    height = 400;
+    energy = 100;
 
     isEndboss = true;
-    energy = 100;
     isDying = false;
+    isActive = false;
 
     ENDBOSS_WALK = ImageHub.end_boss.walk;
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
 
     constructor() {
         super();
-        this.loadImage(this.ENDBOSS_WALK[0]);
+        this.loadImage('./assets/img/4_enemie_boss_chicken/1_walk/G1.png');
         this.loadImages(this.ENDBOSS_WALK);
         this.loadImages(this.ENDBOSS_DEAD);
+        this.speed = 2.5;
+    }
 
-        this.speed = 0.15;
-        this.animate();
+    activate() {
+        if (this.isActive) return;
+        this.isActive = true;
+        
+        this.startMovement();
+        this.startAnimation();
+    }
+
+    startMovement() {
+        IntervalHub.startInterval(() => {
+            if (this.isDying) return;
+            this.moveLeft();
+        }, 1000 / 60);
+    }
+
+    startAnimation() {
+        IntervalHub.startInterval(() => {
+            if (this.isDying) return;
+            this.playAnimation(this.ENDBOSS_WALK);
+        }, 150);
     }
 
     hit(damage = 20) {
@@ -38,17 +59,6 @@ export class Endboss extends MovableObject {
     dead() {
         this.isDying = true;
         this.playAnimation(this.ENDBOSS_DEAD);
-
-        setTimeout(() => {
-            this.markedForRemoval = true;
-        }, 1000);
-    }
-
-    animate() {
-        IntervalHub.startInterval(() => {
-            if (this.isDying) return;
-            this.playAnimation(this.ENDBOSS_WALK);
-            this.moveLeft();
-        }, 200);
+        IntervalHub.startTimeout(() => {this.markedForRemoval = true;}, 1000);
     }
 }

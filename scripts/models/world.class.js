@@ -12,65 +12,60 @@ export class World {
     ctx;
     keyboard;
     level = level1;
-
     character = new Character();
-    endboss;
-
     StatusBarHealth = new StatusBarHealth();
     StatusBarBottles = new StatusBarBottles();
     StatusBarCoins = new StatusBarCoins();
     StatusBarEndboss;
-
     throwableObjects = [];
-
     coinCollected = 0;
     bottlesCollected = 0;
     throwReady = true;
-
     camera_x = 0;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
         this.keyboard = keyboard;
-
-        this.initEndboss();
+        this.initEndboss(); /* ? */
         this.setWorld();
         this.play();
         this.draw();
     }
 
+    // add endboss + healthbar to the world
     initEndboss() {
         this.endboss = new Endboss();
         this.level.enemies.push(this.endboss);
         this.StatusBarEndboss = new StatusBarEndboss(this.endboss);
     }
 
+    /* initialize world = this */
     setWorld() {
         this.character.world = this;
     }
 
     play() {
-        IntervalHub.startInterval(this.checkCollision, 1000 / 60);
+        IntervalHub.startInterval(this.checkCollision, 1000 / 10);
         IntervalHub.startInterval(this.checkThrowObjects, 1000 / 60);
         IntervalHub.startInterval(this.checkBottleHit, 1000 / 60);
         IntervalHub.startInterval(this.checkCoinCollection, 1000 / 60);
         IntervalHub.startInterval(this.checkBottleCollection, 1000 / 60);
+        IntervalHub.startInterval(this.checkEndbossActivation, 1000 / 60);
     }
 
     /* collision */
-
     checkCollision = () => {
         this.level.enemies.forEach(enemy => {
             if (enemy.isDying) return;
-            if (!this.character.isCollidingOffset(enemy)) return;
-
-            if (this.character.speedY < 0 && this.character.isAboveGround()) {
-                enemy.dead();
-                this.character.speedY = 15;
-            } else {
-                this.character.hit(enemy);
-                this.StatusBarHealth.setPercentage(this.character.energy);
+            if (this.character.isCollidingOffset(enemy)){
+                if (this.character.speedY < 0 && this.character.isAboveGround()) {
+                    enemy.dead();
+                    this.character.speedY = 15;
+                } else {
+                    this.character.hit(enemy);
+                    this.StatusBarHealth.setPercentage(this.character.energy);
+                }
             }
         });
 
@@ -114,8 +109,7 @@ export class World {
         IntervalHub.startTimeout(() => this.throwReady = true, 500);
     };
 
-    /* collect items*/
-
+    /* collect items */
     checkCoinCollection = () => {
         this.level.coins.forEach(coin => {
             if (this.character.isCollidingOffset(coin)) {
@@ -146,11 +140,31 @@ export class World {
         );
     };
 
-    /* draw objects to world */
+    /* activate enbdoss */
+    checkEndbossActivation = () => {
+        this.level.enemies.forEach(enemy => {
+            if (!enemy.isEndboss) return;
+            if (enemy.isActive) return;
 
+            if (this.character.x > 1000) {
+                enemy.activate();
+            }
+        });
+    };
+
+    /* flip endboss & follow character if characters y is > endboss y */
+    checkEndbossFollow = () => {
+        this.level.enemies.forEach(enemy => {
+            if (!enemy.isEndboss) return;
+            if (enemy.isActive && this.character.x > enemy.x){
+                // funktion flipImage für endboss + move right
+            }
+        });
+    }
+
+    /* draw objects into world */
     draw() {
         this.cameraUpdate();
-
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
 

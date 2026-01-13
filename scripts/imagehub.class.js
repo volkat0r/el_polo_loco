@@ -114,9 +114,9 @@ export class ImageHub {
             "./assets/img/4_enemie_boss_chicken/4_hurt/G23.png",
         ],
         dead: [
-            "./assets/img/4_enemie_boss_chicken/4_dead/G24.png",
-            "./assets/img/4_enemie_boss_chicken/4_dead/G25.png",
-            "./assets/img/4_enemie_boss_chicken/4_dead/G26.png"
+            "./assets/img/4_enemie_boss_chicken/5_dead/G24.png",
+            "./assets/img/4_enemie_boss_chicken/5_dead/G25.png",
+            "./assets/img/4_enemie_boss_chicken/5_dead/G26.png"
         ]
     };
 

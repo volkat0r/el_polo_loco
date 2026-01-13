@@ -22,6 +22,7 @@ export class StatusBarEndboss extends DrawableObject {
         this.setPercentage(this.endboss.energy);
     }
 
+    // position of healthbar (above endboss)
     updatePosition() {
         this.x = this.endboss.x + 40;
         this.y = this.endboss.y - 40;

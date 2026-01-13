@@ -1,6 +1,5 @@
 import { Chicken } from "../models/chicken.class.js";
 import { ChickenSmall } from "../models/chicken-small.class.js";
-import { Endboss } from "../models/endboss.class.js";
 import { Coins } from "../models/coin.class.js";
 import { Bottles } from "../models/bottle.class.js";
 import { Level } from "../models/level.class.js";
@@ -11,7 +10,6 @@ export let level1;
 
 level1 = new Level(
     [
-        new Endboss(),
         new ChickenSmall,
         new ChickenSmall,
         new ChickenSmall,
