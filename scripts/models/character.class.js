@@ -30,8 +30,8 @@ export class Character extends MovableObject{
 
     constructor(){
         super();
-        this.showFrame = true;
-        this.showOffsetFrame = true;
+        this.showFrame = false;
+        this.showOffsetFrame = false;
         this.loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_WALK);

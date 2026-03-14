@@ -20,13 +20,7 @@ export class Coins extends MovableObject {
         this.y = 150 + Math.random() * 100;
         this.collected = false;
         this.animate();
-
-        this.offset = {
-            left: 35,
-            right: 35,
-            top: 35,
-            bottom: 35
-        };
+        this.offset = {left: 35, right: 35, top: 35, bottom: 35};
     }
 
     animate() {

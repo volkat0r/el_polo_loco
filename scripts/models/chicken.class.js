@@ -18,8 +18,8 @@ export class Chicken extends MovableObject{
 
     constructor(){
         super();
-        this.showFrame = true;
-        this.showOffsetFrame = true;
+        this.showFrame = false;
+        this.showOffsetFrame = false;
         this.loadImage(this.CHICKEN_WALK[0]);
         this.loadImages(this.CHICKEN_WALK);
         this.loadImages(this.CHICKEN_DEAD);

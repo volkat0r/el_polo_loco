@@ -13,8 +13,8 @@ export class Bottles extends MovableObject {
     constructor(){
         super();
 
-        this.showFrame = true;
-        this.showOffsetFrame = true;
+        this.showFrame = false;
+        this.showOffsetFrame = false;
         this.loadImage(this.BOTTLE_ON_GROUND[0]);
         this.x = Math.random() * 1500;
         this.y = 330;

@@ -12,7 +12,6 @@ export class Endboss extends MovableObject {
     isEndboss = true;
     isDying = false;
     isActive = false;
-
     ENDBOSS_WALK = ImageHub.end_boss.walk;
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
 
@@ -22,6 +21,9 @@ export class Endboss extends MovableObject {
         this.loadImages(this.ENDBOSS_WALK);
         this.loadImages(this.ENDBOSS_DEAD);
         this.speed = 2.5;
+        this.showFrame = true;
+        this.showOffsetFrame = true;
+        this.offset = {left: 20, right: 10, top: 35, bottom: 35};
     }
 
     activate() {

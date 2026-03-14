@@ -10,8 +10,6 @@ export class ThrowableObject extends MovableObject {
 
     constructor(x, y){
         super();
-        this.showFrame = true;
-        this.showOffsetFrame = true;
         this.loadImage(this.BOTTEL_ROTATION[0]);
         this.x = x;
         this.y = y;
