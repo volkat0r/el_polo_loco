@@ -1,5 +1,5 @@
 import { IntervalHub } from "../intervalhub.class.js";
-import { level1 } from "../levels/level1.js";
+import { createLevel1 } from "../levels/level1.js";
 import { Character } from "./character.class.js";
 import { Endboss } from "./endboss.class.js";
 import { StatusBarHealth } from "./statusbar-health.class.js";
@@ -11,7 +11,7 @@ import { ThrowableObject } from "./throwable-object.class.js";
 export class World {
     ctx;
     keyboard;
-    level = level1;
+    level = createLevel1();
     character = new Character();
     StatusBarHealth = new StatusBarHealth();
     StatusBarBottles = new StatusBarBottles();
@@ -22,6 +22,8 @@ export class World {
     bottlesCollected = 0;
     throwReady = true;
     camera_x = 0;
+    animationFrameId = null;
+    isStopped = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
@@ -46,13 +48,31 @@ export class World {
     }
 
     play() {
-        IntervalHub.startInterval(this.checkCollision, 1000 / 10);
+        IntervalHub.startInterval(this.checkCollision, 1000 / 60);
         IntervalHub.startInterval(this.checkThrowObjects, 1000 / 60);
         IntervalHub.startInterval(this.checkBottleHit, 1000 / 60);
         IntervalHub.startInterval(this.checkCoinCollection, 1000 / 60);
         IntervalHub.startInterval(this.checkBottleCollection, 1000 / 60);
         IntervalHub.startInterval(this.checkEndbossActivation, 1000 / 60);
+        IntervalHub.startInterval(this.checkEndConditions, 1000 / 20);
     }
+
+    checkEndConditions = () => {
+        if (this.isStopped) return;
+
+        if (this.character.isDead()) {
+            if (typeof window.endGame === "function") {
+                window.endGame("lose");
+            }
+            return;
+        }
+
+        if (this.endboss && this.endboss.isDying) {
+            if (typeof window.endGame === "function") {
+                window.endGame("win");
+            }
+        }
+    };
 
     /* collision */
     checkCollision = () => {
@@ -164,6 +184,8 @@ export class World {
 
     /* draw objects into world */
     draw() {
+        if (this.isStopped) return;
+
         this.cameraUpdate();
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.ctx.translate(this.camera_x, 0);
@@ -184,7 +206,19 @@ export class World {
         this.addToMap(this.StatusBarBottles);
         this.addToMap(this.StatusBarCoins);
 
-        requestAnimationFrame(() => this.draw());
+        this.animationFrameId = requestAnimationFrame(() => this.draw());
+    }
+
+    stop() {
+        if (this.isStopped) return;
+
+        this.isStopped = true;
+        IntervalHub.clearAll();
+
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
+        }
     }
 
     cameraUpdate() {

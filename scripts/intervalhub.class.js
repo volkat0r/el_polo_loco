@@ -1,34 +1,33 @@
 export class IntervalHub {
     // saves regirstered Interval-IDS;
-    static allIntervalls = [];
+    static allIntervals = [];
+    static allTimeouts = [];
 
     // start a new Interval and added new Interval into allIntervall-Array
     static startInterval(func, timer){
-        const newInterval = setInterval(func, timer);
-        IntervalHub.allIntervalls.push(newInterval);
-    }
-
-    // stops all regirstered Interval-IDS & clear allIntervall-Array
-    static stopInterval() {
-        IntervalHub.allIntervalls.forEach(clearInterval);
-        IntervalHub.allIntervalls = [];
+        const id = setInterval(func, timer);
+        this.allIntervals.push(id);
+        return id;
     }
 
     // 
     static startTimeout(func, timer) {
         const id = setTimeout(() => {
             func();
-            this.allIntervalls = this.allIntervalls.filter(i => i !== id);
+            this.allTimeouts = this.allTimeouts.filter(timeoutId => timeoutId !== id);
         }, timer);
 
-        this.allIntervalls.push(id);
+        this.allTimeouts.push(id);
         return id;
     }
 
     // clearing all interval-arrays
     static clearAll() {
-        this.allIntervalls.forEach(clearInterval);
-        this.allIntervalls = [];
+        this.allIntervals.forEach(id => clearInterval(id));
+        this.allTimeouts.forEach(id => clearTimeout(id));
+
+        this.allIntervals = [];
+        this.allTimeouts = [];
     }
 
 }
