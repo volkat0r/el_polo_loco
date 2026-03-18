@@ -12,6 +12,8 @@ export class Endboss extends MovableObject {
     isEndboss = true;
     isDying = false;
     isActive = false;
+    world;
+    moveDirection = -1;
     ENDBOSS_WALK = ImageHub.end_boss.walk;
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
 
@@ -37,7 +39,7 @@ export class Endboss extends MovableObject {
     startMovement() {
         IntervalHub.startInterval(() => {
             if (this.isDying) return;
-            this.moveLeft();
+            this.watchingLevel();
         }, 1000 / 60);
     }
 
@@ -62,5 +64,48 @@ export class Endboss extends MovableObject {
         this.isDying = true;
         this.playAnimation(this.ENDBOSS_DEAD);
         IntervalHub.startTimeout(() => {this.markedForRemoval = true;}, 1000);
+    }
+
+    watchingLevel() {
+        if (!this.world) return;
+
+        if (this.characterIsBehind()) {
+            this.moveDirection *= -1;
+        }
+
+        if (this.moveDirection < 0) {
+            this.otherDirection = false;
+            this.x = Math.max(this.x - this.speed, this.getMinX());
+            if (this.x <= this.getMinX()) {
+                this.moveDirection = 1;
+            }
+            return;
+        }
+
+        this.otherDirection = true;
+        this.x = Math.min(this.x + this.speed, this.getMaxX());
+        if (this.x >= this.getMaxX()) {
+            this.moveDirection = -1;
+        }
+    }
+
+    characterIsBehind() {
+        const characterCenter = this.world.character.x + this.world.character.width / 2;
+        const bossCenter = this.x + this.width / 2;
+        const turnThreshold = 20;
+
+        if (this.moveDirection < 0) {
+            return characterCenter > bossCenter + turnThreshold;
+        }
+
+        return characterCenter < bossCenter - turnThreshold;
+    }
+
+    getMinX() {
+        return 0;
+    }
+
+    getMaxX() {
+        return this.world.level.level_end_x + this.world.canvas.width - this.width;
     }
 }

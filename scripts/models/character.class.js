@@ -12,6 +12,7 @@ export class Character extends MovableObject{
     world;
     lastMove = 100;
     lastHit = 0;
+    DAMAGE_COOLDOWN_MS = 500;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -41,13 +42,7 @@ export class Character extends MovableObject{
         this.animate();
         this.applyGravity();
 
-        this.offset = {
-            left: 40,
-            right: 40,
-            top: 140,
-            bottom: 15
-        };
-
+        this.offset = {left: 40, right: 40, top: 140, bottom: 15};
     }
 
     animate(){
@@ -62,7 +57,7 @@ export class Character extends MovableObject{
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             // Walk Animation
             this.playAnimation(this.IMAGES_WALK);
-            // SoundHub.play(this.SOUND_WALK);
+            SoundHub.play(this.SOUND_WALK);
         } else if (this.isHurt()) {
             // Hurt Animation
             this.playAnimation(this.IMAGES_HURT);
@@ -98,18 +93,22 @@ export class Character extends MovableObject{
     }
 
     hit(enemy) {
+        if (this.isHurt()) {
+            return false;
+        }
+
         this.energy -= 5;
         if (this.energy < 0) {
             this.energy = 0;
-        } else {
-            this.lastHit = new Date().getTime();
         }
+
+        this.lastHit = Date.now();
+        return true;
     }
 
     isHurt(){
-        let timepassed = new Date() - this.lastHit; // difference of actual- & lastHit-time
-        timepassed = timepassed / 100; // recalculate in seconds
-        return timepassed < 0.5; // return if 5 seconds are passed
+        const timePassed = Date.now() - this.lastHit;
+        return timePassed < this.DAMAGE_COOLDOWN_MS;
     }
 
     isDead(){

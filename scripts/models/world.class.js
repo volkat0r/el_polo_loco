@@ -45,6 +45,9 @@ export class World {
     /* initialize world = this */
     setWorld() {
         this.character.world = this;
+        if (this.endboss) {
+            this.endboss.world = this;
+        }
     }
 
     play() {
@@ -79,12 +82,14 @@ export class World {
         this.level.enemies.forEach(enemy => {
             if (enemy.isDying) return;
             if (this.character.isCollidingOffset(enemy)){
-                if (this.character.speedY < 0 && this.character.isAboveGround()) {
+                if (this.isStompCollision(enemy)) {
                     enemy.dead();
                     this.character.speedY = 15;
                 } else {
-                    this.character.hit(enemy);
-                    this.StatusBarHealth.setPercentage(this.character.energy);
+                    const tookDamage = this.character.hit(enemy);
+                    if (tookDamage) {
+                        this.StatusBarHealth.setPercentage(this.character.energy);
+                    }
                 }
             }
         });
@@ -94,13 +99,29 @@ export class World {
         );
     };
 
+    isStompCollision(enemy) {
+        if (!this.character.isAboveGround()) return false;
+        if (this.character.speedY > 0) return false;
+
+        const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
+        const enemyTop = enemy.y + enemy.offset.top;
+
+        return characterBottom <= enemyTop + 30;
+    }
+
     checkBottleHit = () => {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
-                if (!enemy.isEndboss) return;
+                if (bottle.markedForRemoval) return;
+                if (enemy.isDying) return;
                 if (!bottle.isCollidingOffset(enemy)) return;
 
-                enemy.hit(20);
+                if (enemy.isEndboss && typeof enemy.hit === "function") {
+                    enemy.hit(20);
+                } else if (typeof enemy.dead === "function") {
+                    enemy.dead();
+                }
+
                 bottle.markedForRemoval = true;
             });
         });
@@ -115,10 +136,13 @@ export class World {
         if (!this.keyboard.THROW) return;
         if (!this.throwReady || this.bottlesCollected <= 0) return;
 
+        const throwToLeft = this.character.otherDirection;
+        const bottleStartX = throwToLeft ? this.character.x - 20 : this.character.x + 100;
+
         const bottle = new ThrowableObject(
-            this.character.x + 100,
+            bottleStartX,
             this.character.y + 100,
-            this.character.otherDirection
+            throwToLeft
         );
 
         this.throwableObjects.push(bottle);
@@ -171,16 +195,6 @@ export class World {
             }
         });
     };
-
-    /* flip endboss & follow character if characters y is > endboss y */
-    checkEndbossFollow = () => {
-        this.level.enemies.forEach(enemy => {
-            if (!enemy.isEndboss) return;
-            if (enemy.isActive && this.character.x > enemy.x){
-                // funktion flipImage für endboss + move right
-            }
-        });
-    }
 
     /* draw objects into world */
     draw() {

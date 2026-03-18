@@ -8,13 +8,15 @@ export class ThrowableObject extends MovableObject {
     BOTTEL_ROTATION = ImageHub.salsa_bottle.bottle_rotation;
     BOTTLE_SPLASH = ImageHub.salsa_bottle.bottle_splash;
 
-    constructor(x, y){
+    constructor(x, y, throwToLeft = false){
         super();
         this.loadImage(this.BOTTEL_ROTATION[0]);
         this.x = x;
         this.y = y;
         this.width = 80;
         this.height = 110;
+        this.throwDirection = throwToLeft ? -1 : 1;
+        this.otherDirection = throwToLeft;
         this.throw();
         this.animate();
 
@@ -36,7 +38,7 @@ export class ThrowableObject extends MovableObject {
     }
 
     throwBottle = () => {
-        this.x += 10;
+        this.x += 10 * this.throwDirection;
     }
 
     isAboveGround(){
