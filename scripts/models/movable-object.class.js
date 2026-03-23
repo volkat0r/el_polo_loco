@@ -49,9 +49,7 @@ export class MovableObject extends DrawableObject{
 
     moveRight = () => {
         this.otherDirection = false;
-        if (this.x < this.world.level.level_end_x) {
-            this.x += this.speed;
-        }
+        this.x += this.speed;
     };
 
     moveLeft = () => {

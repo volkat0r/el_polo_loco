@@ -69,24 +69,57 @@ h1{
 
 #screen-btn {
     margin-top: 6px;
-    padding: 12px 28px;
-    border: 2px solid rgba(255, 221, 151, 0.9);
-    border-radius: 999px;
-    background: linear-gradient(180deg, #f5ba50, #db8320);
-    color: #2f1700;
-    font-family: "AlphaLyrae", sans-serif;
-    font-size: 1.05rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
     cursor: pointer;
-    transition: transform 120ms ease, box-shadow 120ms ease;
+    transition: transform 120ms ease;
     &:hover{
         transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgba(240, 150, 32, 0.45);
+        &:after{
+            content:"";
+        }
     }
     &:active{
         transform: translateY(0);
     }
+
+    img {
+        display: block;
+        width: 5rem;
+        height: auto;
+    }
 }
 /* #endregion */
+
+.overlay-symbols {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    z-index: 100;
+    ul{ 
+        display: flex;
+        gap: 8px;
+    }
+    li{
+        opacity: 0.4;
+        transition: transform 120ms ease, opacity 120ms ease;
+        cursor: pointer;
+        &:hover{
+            opacity: 0.8;
+        }
+    }
+    img{
+        width: 3rem;
+    }
+}
+
+.overlay-symbols .is-hidden {
+    display: none;
+}
+
 
 /* #region - instructions*/
 div.instructions{

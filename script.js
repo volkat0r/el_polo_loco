@@ -11,6 +11,13 @@ let screenOverlay;
 let screenTitle;
 let screenText;
 let screenBtn;
+let muteButton;
+let unmuteButton;
+
+const SCREEN_BUTTON_IMAGES = {
+    start: "./assets/img/play-key.webp",
+    restart: "./assets/img/play-again-button.webp"
+};
 
 window.addEventListener("DOMContentLoaded", () => {
     init();
@@ -22,16 +29,35 @@ function init(){
     screenTitle = document.getElementById("screen-title");
     screenText = document.getElementById("screen-text");
     screenBtn = document.getElementById("screen-btn");
+    muteButton = document.querySelector(".overlay-symbols .mute");
+    unmuteButton = document.querySelector(".overlay-symbols .unmute");
     ctx = canvas.getContext('2d');
 
     SoundHub.init();
     setScreen("start");
+    updateSoundButtonsState();
 
     screenBtn.addEventListener("click", () => {
         if (screenBtn.dataset.action === "start" || screenBtn.dataset.action === "restart") {
             startGame();
         }
     });
+
+    muteButton?.addEventListener("click", () => {
+        SoundHub.muteAll();
+        updateSoundButtonsState();
+    });
+
+    unmuteButton?.addEventListener("click", () => {
+        SoundHub.unMuteAll();
+        updateSoundButtonsState();
+    });
+}
+
+function updateSoundButtonsState() {
+    const muted = SoundHub.isMuted;
+    muteButton?.classList.toggle("is-hidden", muted);
+    unmuteButton?.classList.toggle("is-hidden", !muted);
 }
 
 /* Game Status */
@@ -63,15 +89,15 @@ function endGame(status) {
 /* Game Overlay */
 function setScreen(status) {
     if (status === "start") {
-        showOverlay("El Pollo Loco", "Bereit? Starte das Spiel.", "Start", "start");
+        showOverlay("El Pollo Loco", "Ready? Start the game!", "Start", "start");
     }
 
     if (status === "win") {
-        showOverlay("Gewonnen!", "Der Endboss ist besiegt.", "Nochmal spielen", "restart");
+        showOverlay("Gewonnen!", "The endboss is dead!", "Play again", "restart");
     }
 
     if (status === "lose") {
-        showOverlay("Verloren!", "Pepe ist k.o.", "Nochmal spielen", "restart");
+        showOverlay("Verloren!", "Pepe has died!", "Play again", "restart");
     }
 
     if (status === "playing") {
@@ -82,9 +108,17 @@ function setScreen(status) {
 function showOverlay(title, text, buttonLabel, action) {
     screenTitle.textContent = title;
     screenText.textContent = text;
-    screenBtn.textContent = buttonLabel;
+    setOverlayButtonImage(action, buttonLabel);
     screenBtn.dataset.action = action;
     screenOverlay.classList.remove("hidden");
+}
+
+function setOverlayButtonImage(action, fallbackAlt) {
+    const imageSrc = SCREEN_BUTTON_IMAGES[action] || SCREEN_BUTTON_IMAGES.start;
+    const altText = fallbackAlt || "Start";
+
+    screenBtn.innerHTML = `<img src="${imageSrc}" alt="${altText}">`;
+    screenBtn.setAttribute("aria-label", altText);
 }
 
 function hideOverlay() {

@@ -77,8 +77,9 @@ export class Character extends MovableObject{
     }
 
     inputCheck = () => {
-        if(this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+        if(this.world.keyboard.RIGHT && this.x < this.getMaxCharacterX()) {
             this.moveRight();
+            this.otherDirection = false;
         }
         if(this.world.keyboard.LEFT && this.x > 0) {
             this.otherDirection = true;
@@ -88,6 +89,15 @@ export class Character extends MovableObject{
             SoundHub.playOne(this.SOUND_JUMP);
             this.jump();
         }
+    }
+
+    getMaxCharacterX() {
+        if (!this.world || !this.world.canvas || !this.world.level) {
+            return Number.POSITIVE_INFINITY;
+        }
+
+        // level_end_x is the camera limit; convert it to the furthest character x.
+        return this.world.level.level_end_x + this.world.canvas.width - this.width;
     }
 
     getLastMove(){

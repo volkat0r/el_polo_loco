@@ -8,9 +8,14 @@ export class ThrowableObject extends MovableObject {
     BOTTEL_ROTATION = ImageHub.salsa_bottle.bottle_rotation;
     BOTTLE_SPLASH = ImageHub.salsa_bottle.bottle_splash;
 
+    isSplashing = false;
+    GROUND_Y = 360;
+
     constructor(x, y, throwToLeft = false){
         super();
         this.loadImage(this.BOTTEL_ROTATION[0]);
+        this.loadImages(this.BOTTEL_ROTATION);
+        this.loadImages(this.BOTTLE_SPLASH);
         this.x = x;
         this.y = y;
         this.width = 80;
@@ -30,6 +35,13 @@ export class ThrowableObject extends MovableObject {
 
     animate(){
         IntervalHub.startInterval(this.throwBottle, 1000 / 25);
+        IntervalHub.startInterval(() => {
+            if (this.isSplashing) {
+                this.playAnimation(this.BOTTLE_SPLASH);}
+            else {
+                this.playAnimation(this.BOTTEL_ROTATION);
+            }
+        }, 1000 / 12);
     }
 
     throw(){
@@ -38,10 +50,23 @@ export class ThrowableObject extends MovableObject {
     }
 
     throwBottle = () => {
+        if (this.isSplashing) return;
         this.x += 10 * this.throwDirection;
+        if (this.y + this.height >= this.GROUND_Y) {
+            this.splash();
+        }
+    }
+
+    splash() {
+        if (this.isSplashing) return;
+        this.isSplashing = true;
+        this.throwDirection = 0;
+        this.speedY = 0;
+        this.currentImage = 0;
+        IntervalHub.startTimeout(() => { this.markedForRemoval = true;}, 500);
     }
 
     isAboveGround(){
-        return true;
+        return !this.isSplashing;
     }
 }

@@ -114,6 +114,7 @@ export class World {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
                 if (bottle.markedForRemoval) return;
+                if (bottle.isSplashing) return;
                 if (enemy.isDying) return;
                 if (!bottle.isCollidingOffset(enemy)) return;
 
@@ -124,7 +125,7 @@ export class World {
                 }
 
                 SoundHub.playOne(SoundHub.throwable.sound);
-                bottle.markedForRemoval = true;
+                bottle.splash();
             });
         });
 
