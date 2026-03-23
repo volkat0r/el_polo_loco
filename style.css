@@ -90,11 +90,34 @@ h1{
 
 /* #region - instructions*/
 div.instructions{
+    text-align: center;
+    h2{
+        font-size: 2.5rem;
+        font-family: "Chimichanga";
+        color: #223c33;
+    }
     ul{
         li{
+            font-family: "Chimichanga";
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.4rem;
+            justify-content: center;
+            margin-bottom: 0.8rem;
 
+            img{
+                height: 3rem;
+                width: auto;
+            }
         }
     }
+    width: 35rem;
+    height: auto;
+    background-image: url("./assets/img/wodden-sign.webp");
+    background-size: 100%;
+    padding: 1rem 3rem;
+    color: white;
 }
 /* #endregion */
 

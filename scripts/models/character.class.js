@@ -53,20 +53,26 @@ export class Character extends MovableObject{
     selectAnimation = () => {
         if(this.isAboveGround()) {
             // Jump Animation
+            SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_JUMP);
+        } else if (this.isDead()) {
+            // Dead Animation
+            SoundHub.stopSingle(this.SOUND_WALK);
+            this.playAnimation(this.IMAGES_DEAD);
+        } else if (this.isHurt()) {
+            // Hurt Animation
+            SoundHub.stopSingle(this.SOUND_WALK);
+            this.playAnimation(this.IMAGES_HURT);
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
             // Walk Animation
             this.playAnimation(this.IMAGES_WALK);
-            SoundHub.play(this.SOUND_WALK);
-        } else if (this.isHurt()) {
-            // Hurt Animation
-            this.playAnimation(this.IMAGES_HURT);
-        } else if (this.isDead()) {
-            // Dead Animation
-            this.playAnimation(this.IMAGES_DEAD);
+            SoundHub.playLoop(this.SOUND_WALK, 0.1);
         } else if (this.fallAsleep()){
             // Sleep Animation
+            SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_IDLE);
+        } else {
+            SoundHub.stopSingle(this.SOUND_WALK);
         };
     }
 
@@ -79,6 +85,7 @@ export class Character extends MovableObject{
             this.moveLeft();
         }
         if (this.world.keyboard.UP && !this.isAboveGround()){
+            SoundHub.playOne(this.SOUND_JUMP);
             this.jump();
         }
     }
@@ -100,6 +107,12 @@ export class Character extends MovableObject{
         this.energy -= 5;
         if (this.energy < 0) {
             this.energy = 0;
+        }
+
+        if (this.energy === 0) {
+            SoundHub.playOne(this.SOUND_DEAD);
+        } else {
+            SoundHub.playOne(this.SOUND_HURT);
         }
 
         this.lastHit = Date.now();

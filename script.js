@@ -1,6 +1,7 @@
 import { World } from "./scripts/models/world.class.js";
 import { Keyboard } from "./scripts/models/keyboard.class.js";
 import { IntervalHub } from "./scripts/intervalhub.class.js";
+import { SoundHub } from "./scripts/soundhub.class.js";
 
 let canvas;
 let world;
@@ -23,6 +24,7 @@ function init(){
     screenBtn = document.getElementById("screen-btn");
     ctx = canvas.getContext('2d');
 
+    SoundHub.init();
     setScreen("start");
 
     screenBtn.addEventListener("click", () => {
@@ -41,6 +43,7 @@ function startGame() {
 
     world = new World(canvas, keyboard);
     window.world = world;
+    SoundHub.playOne(SoundHub.gameStart.sound);
 }
 
 function stopGame() {

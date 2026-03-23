@@ -6,7 +6,7 @@ import { MovableObject } from "./movable-object.class.js";
 export class Chicken extends MovableObject{
     y = 360;
     width = 70;
-    height = 55;a
+    height = 55;
     isDying = false;
     
     // Image Hub
@@ -53,7 +53,7 @@ export class Chicken extends MovableObject{
         this.isDying = true;
         this.speed = 0;
 
-        // SoundHub.playOne(SoundHub.chicken.dead);
+        SoundHub.playOne(SoundHub.chicken.dead);
         IntervalHub.startTimeout(() => {
             this.markedForRemoval = true;
         }, 60);

@@ -7,6 +7,7 @@ import { StatusBarBottles } from "./statusbar-bottles.class.js";
 import { StatusBarCoins } from "./statusbar-coins.class.js";
 import { StatusBarEndboss } from "./statusbar-endboss.class.js";
 import { ThrowableObject } from "./throwable-object.class.js";
+import { SoundHub } from "../soundhub.class.js";
 
 export class World {
     ctx;
@@ -117,11 +118,12 @@ export class World {
                 if (!bottle.isCollidingOffset(enemy)) return;
 
                 if (enemy.isEndboss && typeof enemy.hit === "function") {
-                    enemy.hit(20);
+                    enemy.hit(5);
                 } else if (typeof enemy.dead === "function") {
                     enemy.dead();
                 }
 
+                SoundHub.playOne(SoundHub.throwable.sound);
                 bottle.markedForRemoval = true;
             });
         });
@@ -159,6 +161,7 @@ export class World {
             if (this.character.isCollidingOffset(coin)) {
                 this.coinCollected++;
                 this.StatusBarCoins.collectCoin();
+                SoundHub.playOne(SoundHub.collect.sound);
                 coin.markedForRemoval = true;
             }
         });
@@ -175,6 +178,7 @@ export class World {
             if (this.character.isCollidingOffset(bottle)) {
                 this.bottlesCollected++;
                 this.StatusBarBottles.collectBottle();
+                SoundHub.playOne(SoundHub.collect.sound);
                 bottle.markedForRemoval = true;
             }
         });
@@ -192,6 +196,7 @@ export class World {
 
             if (this.character.x > 1000) {
                 enemy.activate();
+                SoundHub.playOne(SoundHub.endboss.entry);
             }
         });
     };
