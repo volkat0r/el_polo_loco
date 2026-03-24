@@ -51,14 +51,14 @@ export class Character extends MovableObject{
     }
 
     selectAnimation = () => {
-        if(this.isAboveGround()) {
-            // Jump Animation
-            SoundHub.stopSingle(this.SOUND_WALK);
-            this.playAnimation(this.IMAGES_JUMP);
-        } else if (this.isDead()) {
+        if (this.isDead()) {
             // Dead Animation
             SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_DEAD);
+        } else if(this.isAboveGround()) {
+            // Jump Animation
+            SoundHub.stopSingle(this.SOUND_WALK);
+            this.playAnimation(this.IMAGES_JUMP);
         } else if (this.isHurt()) {
             // Hurt Animation
             SoundHub.stopSingle(this.SOUND_WALK);
@@ -114,7 +114,7 @@ export class Character extends MovableObject{
             return false;
         }
 
-        this.energy -= 5;
+        this.energy -= 20;
         if (this.energy < 0) {
             this.energy = 0;
         }

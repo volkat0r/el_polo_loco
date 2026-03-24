@@ -93,11 +93,11 @@ function setScreen(status) {
     }
 
     if (status === "win") {
-        showOverlay("Gewonnen!", "The endboss is dead!", "Play again", "restart");
+        showOverlay("You won!", "The endboss is dead!", "Play again", "restart");
     }
 
     if (status === "lose") {
-        showOverlay("Verloren!", "Pepe has died!", "Play again", "restart");
+        showOverlay("You lost!", "Pepe has died!", "Play again", "restart");
     }
 
     if (status === "playing") {

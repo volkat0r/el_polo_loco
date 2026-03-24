@@ -25,6 +25,7 @@ export class World {
     camera_x = 0;
     animationFrameId = null;
     isStopped = false;
+    loseSequenceStarted = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
@@ -65,9 +66,15 @@ export class World {
         if (this.isStopped) return;
 
         if (this.character.isDead()) {
-            if (typeof window.endGame === "function") {
-                window.endGame("lose");
-            }
+            if (this.loseSequenceStarted) return;
+
+            this.loseSequenceStarted = true;
+            IntervalHub.startTimeout(() => {
+                if (this.isStopped) return;
+                if (typeof window.endGame === "function") {
+                    window.endGame("lose");
+                }
+            }, 900);
             return;
         }
 
@@ -119,7 +126,7 @@ export class World {
                 if (!bottle.isCollidingOffset(enemy)) return;
 
                 if (enemy.isEndboss && typeof enemy.hit === "function") {
-                    enemy.hit(5);
+                    enemy.hit(20);
                 } else if (typeof enemy.dead === "function") {
                     enemy.dead();
                 }
