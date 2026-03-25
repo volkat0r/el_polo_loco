@@ -26,6 +26,7 @@ export class World {
     animationFrameId = null;
     isStopped = false;
     loseSequenceStarted = false;
+    winSequenceStarted = false;
 
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
@@ -66,22 +67,29 @@ export class World {
         if (this.isStopped) return;
 
         if (this.character.isDead()) {
-            if (this.loseSequenceStarted) return;
+            if (!this.loseSequenceStarted) {
+                this.loseSequenceStarted = true;
+            }
 
-            this.loseSequenceStarted = true;
-            IntervalHub.startTimeout(() => {
-                if (this.isStopped) return;
-                if (typeof window.endGame === "function") {
-                    window.endGame("lose");
-                }
-            }, 900);
+            if (!this.character.hasCompletedDeathSequence?.()) return;
+
+            if (typeof window.endGame === "function") {
+                window.endGame("lose");
+            }
             return;
         }
 
         if (this.endboss && this.endboss.isDying) {
-            if (typeof window.endGame === "function") {
-                window.endGame("win");
-            }
+            if (this.winSequenceStarted) return;
+
+            this.winSequenceStarted = true;
+            const winDelay = this.endboss.getDeathAnimationDurationMs?.() ?? 1000;
+            IntervalHub.startTimeout(() => {
+                if (this.isStopped) return;
+                if (typeof window.endGame === "function") {
+                    window.endGame("win");
+                }
+            }, winDelay);
         }
     };
 

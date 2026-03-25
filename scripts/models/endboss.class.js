@@ -12,8 +12,11 @@ export class Endboss extends MovableObject {
     isEndboss = true;
     isDying = false;
     isActive = false;
+    deathAnimationFrame = 0;
+    deathAnimationDone = false;
     world;
     moveDirection = -1;
+    DEAD_ANIMATION_INTERVAL_MS = 150;
     ENDBOSS_WALK = ImageHub.end_boss.walk;
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
 
@@ -45,9 +48,13 @@ export class Endboss extends MovableObject {
 
     startAnimation() {
         IntervalHub.startInterval(() => {
-            if (this.isDying) return;
+            if (this.isDying) {
+                this.playDeadAnimationOnce();
+                return;
+            }
+
             this.playAnimation(this.ENDBOSS_WALK);
-        }, 150);
+        }, this.DEAD_ANIMATION_INTERVAL_MS);
     }
 
     hit(damage = 20) {
@@ -61,9 +68,37 @@ export class Endboss extends MovableObject {
     }
 
     dead() {
+        if (this.isDying) return;
+
         this.isDying = true;
-        this.playAnimation(this.ENDBOSS_DEAD);
-        IntervalHub.startTimeout(() => {this.markedForRemoval = true;}, 1000);
+        this.speed = 0;
+        this.deathAnimationFrame = 0;
+        this.deathAnimationDone = false;
+    }
+
+    playDeadAnimationOnce() {
+        const lastFrameIndex = this.ENDBOSS_DEAD.length - 1;
+        const frameIndex = Math.min(this.deathAnimationFrame, lastFrameIndex);
+        const framePath = this.ENDBOSS_DEAD[frameIndex];
+
+        this.img = this.imageCache[framePath];
+
+        if (this.deathAnimationFrame < lastFrameIndex) {
+            this.deathAnimationFrame++;
+            return;
+        }
+
+        this.deathAnimationDone = true;
+    }
+
+    getDeathAnimationDurationMs() {
+        let totalDurationMs = 0;
+
+        for (let i = 0; i < this.ENDBOSS_DEAD.length; i++) {
+            totalDurationMs += this.DEAD_ANIMATION_INTERVAL_MS;
+        }
+
+        return totalDurationMs;
     }
 
     watchingLevel() {

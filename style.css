@@ -20,7 +20,7 @@ h1{
 }
 /* #endregion */
 
-/* #region - Canvas & Overlay-Wrapper als Positionierungsbasis */
+/* #region - Canvas & Overlay-Wrapper */
 
 /* Canvas */
 #canvas {
@@ -154,12 +154,101 @@ div.instructions{
 }
 /* #endregion */
 
+/* #region - Responsive Touch-Btns */
+.touch-controls {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    justify-content: space-between;
+    padding: 0 12px;
+    z-index: 50;
+    pointer-events: none;
+}
+
+.touch-controls__left,
+.touch-controls__right {
+    display: flex;
+    gap: 10px;
+    pointer-events: auto;
+}
+
+.touch-btn {
+    img{
+        width: 4rem;
+    }
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    touch-action: none;
+    transition: background 80ms ease;
+}
+
+.touch-btn.pressed {
+    box-shadow: 0px 0px 2rem rgba(255, 225, 0, 0.2);
+}
+
+/* Responsive Portrait Notice */
+.portrait-hint {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.92);
+    color: #fff;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    z-index: 1000;
+    font-size: 1.4rem;
+    padding: 2rem;
+}
+
+@media (hover: none) and (pointer: coarse) and (orientation: portrait) {
+    .portrait-hint {
+        display: flex;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .touch-controls {
+        display: flex;
+    }
+}
+
+/* #endregion */
+
 /* #region - Media Queries */
 /* calculated with em (base 16px) */
-/* Landscape View */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+    header,
+    div.instructions {
+        display: none;
+    }
+    main {
+        padding: 4px 0;
+    }
+    .container {
+        width: min(96vw, calc(90svh * (720 / 480)), 720px);
+        margin: 0 auto;
+    }
+    .screen-overlay {
+        padding: 12px;
+        gap: 8px;
+    }
 
-/* Portrait View */
-/* Mobile */
+    #screen-title {
+        font-size: clamp(1.4rem, 4vw, 2.4rem);
+    }
+    #screen-text {
+        font-size: clamp(0.85rem, 1.8vw, 1rem);
+    }
+}
+
 @media (max-width: 768px) {
     .screen-overlay {
         padding: 16px;

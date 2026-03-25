@@ -19,7 +19,7 @@ export class StatusBarBottles extends DrawableObject{
     }
     
     setPercentage(percentage){
-        this.percentage = percentage;
+        this.percentage = Math.max(0, Math.min(100, percentage));
         let path = this.IMAGES_STATUS_BOTTLES[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
@@ -32,16 +32,16 @@ export class StatusBarBottles extends DrawableObject{
 
     throwBottle() {
         this.percentage -= 20;
-        this.percentage = Math.min(100, this.percentage);
+        this.percentage = Math.max(0, this.percentage);
         this.setPercentage(this.percentage);
     }
 
     resolveImageIndex() {
         if (this.percentage == 100) return 5;
-        if (this.percentage > 80) return 4;
-        if (this.percentage > 60) return 3;
-        if (this.percentage > 40) return 2;
-        if (this.percentage > 20) return 1;
+        if (this.percentage >= 80) return 4;
+        if (this.percentage >= 60) return 3;
+        if (this.percentage >= 40) return 2;
+        if (this.percentage >= 20) return 1;
         return 0;
     }
 

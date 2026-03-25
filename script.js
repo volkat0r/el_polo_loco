@@ -36,6 +36,7 @@ function init(){
     SoundHub.init();
     setScreen("start");
     updateSoundButtonsState();
+    registerTouchControls();
 
     screenBtn.addEventListener("click", () => {
         if (screenBtn.dataset.action === "start" || screenBtn.dataset.action === "restart") {
@@ -74,6 +75,7 @@ function startGame() {
 
 function stopGame() {
     IntervalHub.clearAll();
+    SoundHub.stopAll();
 
     if (world) {
         world.stop();
@@ -151,3 +153,32 @@ window.addEventListener('keyup', (event) => {
 })
 
 window.endGame = endGame;
+
+function registerTouchControls() {
+    const bindings = [
+        { id: 'touch-left',  key: 'LEFT' },
+        { id: 'touch-right', key: 'RIGHT' },
+        { id: 'touch-jump',  key: 'UP' },
+        { id: 'touch-throw', key: 'THROW' },
+    ];
+
+    bindings.forEach(({ id, key }) => {
+        const btn = document.getElementById(id);
+        if (!btn) return;
+
+        btn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            keyboard[key] = true;
+            btn.classList.add('pressed');
+        }, { passive: false });
+
+        const release = (e) => {
+            e.preventDefault();
+            keyboard[key] = false;
+            btn.classList.remove('pressed');
+        };
+
+        btn.addEventListener('touchend',    release, { passive: false });
+        btn.addEventListener('touchcancel', release, { passive: false });
+    });
+}

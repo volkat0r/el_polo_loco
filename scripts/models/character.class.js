@@ -13,6 +13,14 @@ export class Character extends MovableObject{
     lastMove = 100;
     lastHit = 0;
     DAMAGE_COOLDOWN_MS = 500;
+    DEAD_ANIMATION_INTERVAL_MS = 1000 / 20;
+    isDying = false;
+    deathAnimationFrame = 0;
+    deathAnimationDone = false;
+    isFallingAfterDeath = false;
+    hasFallenOutOfScreen = false;
+    DEATH_FALL_SPEED = 12;
+    deathStartY = null;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -54,7 +62,8 @@ export class Character extends MovableObject{
         if (this.isDead()) {
             // Dead Animation
             SoundHub.stopSingle(this.SOUND_WALK);
-            this.playAnimation(this.IMAGES_DEAD);
+            this.playDeadAnimationOnce();
+            this.updateDeathFall();
         } else if(this.isAboveGround()) {
             // Jump Animation
             SoundHub.stopSingle(this.SOUND_WALK);
@@ -77,6 +86,8 @@ export class Character extends MovableObject{
     }
 
     inputCheck = () => {
+        if (this.isDead()) return;
+
         if(this.world.keyboard.RIGHT && this.x < this.getMaxCharacterX()) {
             this.moveRight();
             this.otherDirection = false;
@@ -110,6 +121,10 @@ export class Character extends MovableObject{
     }
 
     hit(enemy) {
+        if (this.isDead()) {
+            return false;
+        }
+
         if (this.isHurt()) {
             return false;
         }
@@ -127,6 +142,67 @@ export class Character extends MovableObject{
 
         this.lastHit = Date.now();
         return true;
+    }
+
+    playDeadAnimationOnce() {
+        if (!this.isDying) {
+            this.isDying = true;
+            this.deathAnimationFrame = 0;
+            this.deathAnimationDone = false;
+            this.isFallingAfterDeath = false;
+            this.hasFallenOutOfScreen = false;
+            this.deathStartY = this.y;
+            this.speedY = 0;
+        }
+
+        if (!this.deathAnimationDone && this.deathStartY !== null) {
+            this.y = this.deathStartY;
+        }
+
+        const lastFrameIndex = this.IMAGES_DEAD.length - 1;
+        const frameIndex = Math.min(this.deathAnimationFrame, lastFrameIndex);
+        const framePath = this.IMAGES_DEAD[frameIndex];
+
+        this.img = this.imageCache[framePath];
+
+        if (this.deathAnimationFrame < lastFrameIndex) {
+            this.deathAnimationFrame++;
+            return;
+        }
+
+        this.deathAnimationDone = true;
+    }
+
+    updateDeathFall() {
+        if (!this.deathAnimationDone) return;
+
+        this.isFallingAfterDeath = true;
+        this.speedY = 0;
+        this.y += this.DEATH_FALL_SPEED;
+
+        const canvasHeight = this.world?.canvas?.height ?? 480;
+        if (this.y >= canvasHeight + this.height) {
+            this.hasFallenOutOfScreen = true;
+        }
+    }
+
+    hasCompletedDeathSequence() {
+        return this.deathAnimationDone && this.hasFallenOutOfScreen;
+    }
+
+    gravityInterval = () => {
+        if (this.isDead()) {
+            return;
+        }
+
+        if (this.isAboveGround() || this.speedY > 0) {
+            this.y -= this.speedY;
+            this.speedY -= this.acceleration;
+        }
+    }
+
+    getDeathAnimationDurationMs() {
+        return this.IMAGES_DEAD.length * this.DEAD_ANIMATION_INTERVAL_MS;
     }
 
     isHurt(){
