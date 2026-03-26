@@ -23,6 +23,16 @@
         <canvas id="canvas" width="720" height="480"></canvas>
         <div class="overlay-symbols">
           <ul>
+            <li class="fullscreen-btn-wrapper">
+              <button
+                class="fullscreen-btn"
+                id="fullscreen-btn"
+                type="button"
+                aria-label="Vollbild"
+              >
+                <img src="./assets/img/fullscreen.webp" alt="Fullscreen" />
+              </button>
+            </li>
             <li class="unmute">
               <img src="./assets/img/loud_button.webp" alt="Loud Button" />
             </li>
@@ -32,6 +42,11 @@
           </ul>
         </div>
         <div id="screen-overlay" class="screen-overlay">
+          <img
+            id="screen-result-image"
+            class="screen-result-image hidden"
+            alt=""
+          />
           <h2 id="screen-title">El Pollo Loco</h2>
           <p id="screen-text">Bereit? Starte das Spiel.</p>
           <button id="screen-btn" type="button">Start</button>
@@ -98,6 +113,8 @@
         </ul>
       </div>
     </main>
-    <footer></footer>
+    <footer>
+      <a href="./imprint.html" style="color: var(--white)">Imprint</a>
+    </footer>
   </body>
 </html>

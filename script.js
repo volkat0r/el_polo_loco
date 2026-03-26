@@ -8,15 +8,22 @@ let world;
 let ctx;
 let keyboard = new Keyboard();
 let screenOverlay;
+let screenResultImage;
 let screenTitle;
 let screenText;
 let screenBtn;
 let muteButton;
 let unmuteButton;
+let fullscreenButton;
 
 const SCREEN_BUTTON_IMAGES = {
     start: "./assets/img/play-key.webp",
     restart: "./assets/img/play-again-button.webp"
+};
+
+const SCREEN_RESULT_IMAGES = {
+    win: "./assets/img/You%20won,%20you%20lost/You%20won%20A.png",
+    lose: "./assets/img/You%20won,%20you%20lost/You%20lost.png"
 };
 
 window.addEventListener("DOMContentLoaded", () => {
@@ -26,11 +33,13 @@ window.addEventListener("DOMContentLoaded", () => {
 function init(){
     canvas = document.getElementById("canvas");
     screenOverlay = document.getElementById("screen-overlay");
+    screenResultImage = document.getElementById("screen-result-image");
     screenTitle = document.getElementById("screen-title");
     screenText = document.getElementById("screen-text");
     screenBtn = document.getElementById("screen-btn");
     muteButton = document.querySelector(".overlay-symbols .mute");
     unmuteButton = document.querySelector(".overlay-symbols .unmute");
+    fullscreenButton = document.getElementById("fullscreen-btn");
     ctx = canvas.getContext('2d');
 
     SoundHub.init();
@@ -53,6 +62,27 @@ function init(){
         SoundHub.unMuteAll();
         updateSoundButtonsState();
     });
+
+    fullscreenButton?.addEventListener("click", () => {
+        toggleFullscreen();
+    });
+}
+
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        const target = document.documentElement;
+        const request =
+            target.requestFullscreen ||
+            target.webkitRequestFullscreen ||
+            target.msRequestFullscreen;
+        request?.call(target)?.catch?.(() => {});
+    } else {
+        const exit =
+            document.exitFullscreen ||
+            document.webkitExitFullscreen ||
+            document.msExitFullscreen;
+        exit?.call(document)?.catch?.(() => {});
+    }
 }
 
 function updateSoundButtonsState() {
@@ -62,8 +92,8 @@ function updateSoundButtonsState() {
 }
 
 /* Game Status */
-
 function startGame() {
+    requestFullscreenOnMobile();
     stopGame();
     resetKeyboard();
     hideOverlay();
@@ -71,6 +101,23 @@ function startGame() {
     world = new World(canvas, keyboard);
     window.world = world;
     SoundHub.playOne(SoundHub.gameStart.sound);
+}
+
+function requestFullscreenOnMobile() {
+    const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+    if (!isTouchDevice) return;
+    if (document.fullscreenElement) return;
+
+    const fullscreenTarget = document.documentElement;
+    const requestFullscreen =
+        fullscreenTarget.requestFullscreen ||
+        fullscreenTarget.webkitRequestFullscreen ||
+        fullscreenTarget.msRequestFullscreen;
+
+    if (typeof requestFullscreen !== "function") return;
+
+    const requestResult = requestFullscreen.call(fullscreenTarget);
+    requestResult?.catch?.(() => {});
 }
 
 function stopGame() {
@@ -108,11 +155,30 @@ function setScreen(status) {
 }
 
 function showOverlay(title, text, buttonLabel, action) {
+    setOverlayResultImage(action);
     screenTitle.textContent = title;
     screenText.textContent = text;
     setOverlayButtonImage(action, buttonLabel);
     screenBtn.dataset.action = action;
     screenOverlay.classList.remove("hidden");
+}
+
+function setOverlayResultImage(status) {
+    if (!screenResultImage) return;
+
+    const imageSrc = SCREEN_RESULT_IMAGES[status];
+
+    if (!imageSrc) {
+        screenResultImage.classList.add("hidden");
+        screenResultImage.removeAttribute("src");
+        screenResultImage.setAttribute("alt", "");
+        return;
+    }
+
+    const altText = status === "win" ? "You won" : "You lost";
+    screenResultImage.src = imageSrc;
+    screenResultImage.alt = altText;
+    screenResultImage.classList.remove("hidden");
 }
 
 function setOverlayButtonImage(action, fallbackAlt) {
