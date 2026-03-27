@@ -1,6 +1,9 @@
 import { ImageHub } from "../imagehub.class.js";
 import { DrawableObject } from "./drawable-object.class.js";
 
+/**
+ * Player health status bar UI.
+ */
 export class StatusBarHealth extends DrawableObject{
     percentage = 100;
     imageCache = {};
@@ -8,6 +11,9 @@ export class StatusBarHealth extends DrawableObject{
     // Image Hub
     IMAGES_STATUS_HEALTH = ImageHub.status_bar.status_health;
 
+    /**
+     * Creates health status bar.
+     */
     constructor(){
         super();
         this.loadImages(this.IMAGES_STATUS_HEALTH);
@@ -18,12 +24,21 @@ export class StatusBarHealth extends DrawableObject{
         this.setPercentage(100);
     }
     
+    /**
+     * Sets bar value and image.
+     * @param {number} percentage
+     * @returns {void}
+     */
     setPercentage(percentage){
         this.percentage = Math.max(0, Math.min(100, percentage));
         let path = this.IMAGES_STATUS_HEALTH[this.resolveImageIndex()];
         this.img = this.imageCache[path];
     }
 
+    /**
+     * Resolves image index for current percentage.
+     * @returns {number}
+     */
     resolveImageIndex() {
         if (this.percentage == 100){
             return 5;

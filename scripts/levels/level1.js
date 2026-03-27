@@ -8,6 +8,10 @@ import { BackgroundObject } from "../models/background-object.class.js";
 
 export let level1;
 
+/**
+ * Creates and returns level 1 setup.
+ * @returns {Level}
+ */
 export function createLevel1() {
     return new Level(
         [

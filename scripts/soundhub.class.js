@@ -1,4 +1,8 @@
+/**
+ * Handles all game sounds and mute state.
+ */
 export class SoundHub {
+    static MUTE_STORAGE_KEY = "epl-muted";
     static isMuted = false;
     static defaultVolume = 0.2;
 
@@ -40,7 +44,13 @@ export class SoundHub {
 
     static Sounds = SoundHub.sounds;
 
+    /**
+     * Initializes audio settings for all sounds.
+     * @returns {void}
+     */
     static init() {
+        SoundHub.isMuted = SoundHub.loadMutedState();
+
         SoundHub.sounds.forEach((sound) => {
             sound.preload = "auto";
             sound.loop = false;
@@ -48,6 +58,12 @@ export class SoundHub {
         });
     }
 
+    /**
+     * Plays one sound from the start.
+     * @param {HTMLAudioElement} sound
+     * @param {number} [volume=SoundHub.defaultVolume]
+     * @returns {void}
+     */
     static playOne(sound, volume = SoundHub.defaultVolume) {
         if (!sound || SoundHub.isMuted) return;
 
@@ -56,10 +72,22 @@ export class SoundHub {
         sound.play().catch(() => {});
     }
 
+    /**
+     * Alias for playOne.
+     * @param {HTMLAudioElement} sound
+     * @param {number} [volume=SoundHub.defaultVolume]
+     * @returns {void}
+     */
     static play(sound, volume = SoundHub.defaultVolume) {
         SoundHub.playOne(sound, volume);
     }
 
+    /**
+     * Plays a sound in loop mode.
+     * @param {HTMLAudioElement} sound
+     * @param {number} [volume=SoundHub.defaultVolume]
+     * @returns {void}
+     */
     static playLoop(sound, volume = SoundHub.defaultVolume) {
         if (!sound || SoundHub.isMuted) return;
 
@@ -71,6 +99,12 @@ export class SoundHub {
         }
     }
 
+    /**
+     * Stops one sound.
+     * @param {HTMLAudioElement} sound
+     * @param {boolean} [reset=false]
+     * @returns {void}
+     */
     static stopSingle(sound, reset = false) {
         if (!sound) return;
 
@@ -80,20 +114,34 @@ export class SoundHub {
         }
     }
 
+    /**
+     * Mutes all sounds.
+     * @returns {void}
+     */
     static muteAll() {
         SoundHub.isMuted = true;
         SoundHub.sounds.forEach((sound) => {
             sound.volume = 0;
         });
+        SoundHub.saveMutedState();
     }
 
+    /**
+     * Unmutes all sounds.
+     * @returns {void}
+     */
     static unMuteAll() {
         SoundHub.isMuted = false;
         SoundHub.sounds.forEach((sound) => {
             sound.volume = SoundHub.defaultVolume;
         });
+        SoundHub.saveMutedState();
     }
 
+    /**
+     * Toggles between muted and unmuted.
+     * @returns {void}
+     */
     static toggleMute() {
         if (SoundHub.isMuted) {
             SoundHub.unMuteAll();
@@ -103,11 +151,39 @@ export class SoundHub {
         SoundHub.muteAll();
     }
 
+    /**
+     * Stops and resets all sounds.
+     * @returns {void}
+     */
     static stopAll() {
         SoundHub.sounds.forEach((sound) => {
             sound.pause();
             sound.currentTime = 0;
             sound.loop = false;
         });
+    }
+
+    /**
+     * Loads mute state from local storage.
+     * @returns {boolean}
+     */
+    static loadMutedState() {
+        try {
+            return window.localStorage.getItem(SoundHub.MUTE_STORAGE_KEY) === "true";
+        } catch {
+            return false;
+        }
+    }
+
+    /**
+     * Saves mute state to local storage.
+     * @returns {void}
+     */
+    static saveMutedState() {
+        try {
+            window.localStorage.setItem(SoundHub.MUTE_STORAGE_KEY, String(SoundHub.isMuted));
+        } catch {
+            // Ignore storage errors (e.g. private mode restrictions).
+        }
     }
 }

@@ -84,6 +84,12 @@ h1{
     display: none;
 }
 
+.screen-overlay-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
 #screen-btn {
     margin-top: 6px;
     padding: 0;
@@ -107,6 +113,34 @@ h1{
         width: 5rem;
         height: auto;
     }
+}
+
+#screen-home-btn {
+    margin-top: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: transform 120ms ease;
+}
+
+#screen-home-btn:hover {
+    transform: translateY(-2px);
+}
+
+#screen-home-btn:active {
+    transform: translateY(0);
+}
+
+#screen-home-btn img {
+    display: block;
+    width: 5rem;
+    height: auto;
+}
+
+#screen-home-btn.hidden {
+    display: none;
 }
 /* #endregion */
 
@@ -263,14 +297,12 @@ div.instructions{
     main {
         min-height: 100dvh;
     }
-
     .container {
         width: 100vw;
         max-width: 100vw;
         margin: 0;
         padding-bottom: 0;
     }
-
     .touch-controls {
         display: flex;
         position: fixed;
@@ -296,13 +328,11 @@ div.instructions{
     div.instructions {
         display: none;
     }
-
     main {
         height: 100dvh;
         padding: 0;
         justify-content: flex-start;
     }
-
     .container {
         width: 100vw;
         max-width: none;
@@ -313,7 +343,6 @@ div.instructions{
         align-items: center;
         justify-content: center;
     }
-
     #canvas {
         width: 100%;
         height: 100%;
@@ -321,27 +350,22 @@ div.instructions{
         object-position: center;
         border-radius: 0;
     }
-
     .fullscreen-btn-wrapper {
         display: list-item;
     }
-
     .touch-controls {
         --touch-btn-size: 3.2rem;
         --touch-controls-height: 70px;
         padding: 0 8px;
     }
-
     .touch-controls__left,
     .touch-controls__right {
         gap: 6px;
     }
-
     .screen-overlay {
         padding: 12px;
         gap: 8px;
     }
-
     #screen-title {
         font-size: clamp(1.4rem, 4vw, 2.4rem);
     }

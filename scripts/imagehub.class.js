@@ -1,3 +1,6 @@
+/**
+ * Central image path collection for all game objects.
+ */
 export class ImageHub {
     static character = {
         idle:[

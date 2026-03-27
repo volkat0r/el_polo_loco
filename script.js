@@ -12,6 +12,7 @@ let screenResultImage;
 let screenTitle;
 let screenText;
 let screenBtn;
+let screenHomeBtn;
 let muteButton;
 let unmuteButton;
 let fullscreenButton;
@@ -30,6 +31,10 @@ window.addEventListener("DOMContentLoaded", () => {
     init();
 });
 
+/**
+ * Initializes UI elements, sounds, and input listeners.
+ * @returns {void}
+ */
 function init(){
     canvas = document.getElementById("canvas");
     screenOverlay = document.getElementById("screen-overlay");
@@ -37,6 +42,7 @@ function init(){
     screenTitle = document.getElementById("screen-title");
     screenText = document.getElementById("screen-text");
     screenBtn = document.getElementById("screen-btn");
+    screenHomeBtn = document.getElementById("screen-home-btn");
     muteButton = document.querySelector(".overlay-symbols .mute");
     unmuteButton = document.querySelector(".overlay-symbols .unmute");
     fullscreenButton = document.getElementById("fullscreen-btn");
@@ -51,6 +57,12 @@ function init(){
         if (screenBtn.dataset.action === "start" || screenBtn.dataset.action === "restart") {
             startGame();
         }
+    });
+
+    screenHomeBtn?.addEventListener("click", () => {
+        stopGame();
+        resetKeyboard();
+        setScreen("start");
     });
 
     muteButton?.addEventListener("click", () => {
@@ -68,6 +80,10 @@ function init(){
     });
 }
 
+/**
+ * Toggles browser fullscreen mode.
+ * @returns {void}
+ */
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         const target = document.documentElement;
@@ -85,6 +101,10 @@ function toggleFullscreen() {
     }
 }
 
+/**
+ * Updates mute/unmute icon visibility.
+ * @returns {void}
+ */
 function updateSoundButtonsState() {
     const muted = SoundHub.isMuted;
     muteButton?.classList.toggle("is-hidden", muted);
@@ -92,6 +112,10 @@ function updateSoundButtonsState() {
 }
 
 /* Game Status */
+/**
+ * Starts a new game session.
+ * @returns {void}
+ */
 function startGame() {
     requestFullscreenOnMobile();
     stopGame();
@@ -103,6 +127,10 @@ function startGame() {
     SoundHub.playOne(SoundHub.gameStart.sound);
 }
 
+/**
+ * Requests fullscreen automatically on touch devices.
+ * @returns {void}
+ */
 function requestFullscreenOnMobile() {
     const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
     if (!isTouchDevice) return;
@@ -120,6 +148,10 @@ function requestFullscreenOnMobile() {
     requestResult?.catch?.(() => {});
 }
 
+/**
+ * Stops the current game and clears running loops.
+ * @returns {void}
+ */
 function stopGame() {
     IntervalHub.clearAll();
     SoundHub.stopAll();
@@ -130,30 +162,62 @@ function stopGame() {
     }
 }
 
+/**
+ * Ends the game and shows the right overlay screen.
+ * @param {"win"|"lose"|"start"|"playing"} status
+ * @returns {void}
+ */
 function endGame(status) {
     stopGame();
     setScreen(status);
 }
 
 /* Game Overlay */
+/**
+ * Selects and shows the correct overlay state.
+ * @param {"win"|"lose"|"start"|"playing"} status
+ * @returns {void}
+ */
 function setScreen(status) {
     if (status === "start") {
+        setHomeButtonVisible(false);
         showOverlay("El Pollo Loco", "Ready? Start the game!", "Start", "start");
     }
 
     if (status === "win") {
+        setHomeButtonVisible(true);
         showOverlay("You won!", "The endboss is dead!", "Play again", "restart");
     }
 
     if (status === "lose") {
+        setHomeButtonVisible(true);
         showOverlay("You lost!", "Pepe has died!", "Play again", "restart");
     }
 
     if (status === "playing") {
+        setHomeButtonVisible(false);
         hideOverlay();
     }
 }
 
+/**
+ * Shows or hides the home button in the overlay.
+ * @param {boolean} visible
+ * @returns {void}
+ */
+function setHomeButtonVisible(visible) {
+    if (!screenHomeBtn) return;
+    screenHomeBtn.classList.toggle("hidden", !visible);
+}
+
+/**
+ * Renders overlay title, text, and action button.
+ * @param {string} title
+ * @param {string} text
+ * @param {string} buttonLabel
+ * @param {string} action
+ * @returns {void}
+ */
 function showOverlay(title, text, buttonLabel, action) {
     setOverlayResultImage(action);
     screenTitle.textContent = title;
@@ -163,6 +227,11 @@ function showOverlay(title, text, buttonLabel, action) {
     screenOverlay.classList.remove("hidden");
 }
 
+/**
+ * Sets win/lose image in the overlay.
+ * @param {string} status
+ * @returns {void}
+ */
 function setOverlayResultImage(status) {
     if (!screenResultImage) return;
 
@@ -181,6 +250,12 @@ function setOverlayResultImage(status) {
     screenResultImage.classList.remove("hidden");
 }
 
+/**
+ * Updates the main overlay button image.
+ * @param {string} action
+ * @param {string} fallbackAlt
+ * @returns {void}
+ */
 function setOverlayButtonImage(action, fallbackAlt) {
     const imageSrc = SCREEN_BUTTON_IMAGES[action] || SCREEN_BUTTON_IMAGES.start;
     const altText = fallbackAlt || "Start";
@@ -189,10 +264,18 @@ function setOverlayButtonImage(action, fallbackAlt) {
     screenBtn.setAttribute("aria-label", altText);
 }
 
+/**
+ * Hides the overlay.
+ * @returns {void}
+ */
 function hideOverlay() {
     screenOverlay.classList.add("hidden");
 }
 
+/**
+ * Resets all keyboard input flags.
+ * @returns {void}
+ */
 function resetKeyboard() {
     keyboard.RIGHT = false;
     keyboard.LEFT = false;
@@ -220,6 +303,10 @@ window.addEventListener('keyup', (event) => {
 
 window.endGame = endGame;
 
+/**
+ * Registers touch input handlers for mobile buttons.
+ * @returns {void}
+ */
 function registerTouchControls() {
     const bindings = [
         { id: 'touch-left',  key: 'LEFT' },

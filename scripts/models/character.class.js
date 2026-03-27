@@ -18,7 +18,7 @@ export class Character extends MovableObject{
     IDLE_DELAY_MS = 5000;
     lastHit = 0;
     DAMAGE_COOLDOWN_MS = 500;
-    DEAD_ANIMATION_INTERVAL_MS = 1000 / 20;
+    DEAD_ANIMATION_INTERVAL_MS = 50;
     isDying = false;
     deathAnimationFrame = 0;
     deathAnimationDone = false;
@@ -26,6 +26,7 @@ export class Character extends MovableObject{
     hasFallenOutOfScreen = false;
     DEATH_FALL_SPEED = 12;
     deathStartY = null;
+    wasJumping = false;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -77,29 +78,46 @@ export class Character extends MovableObject{
      */
     selectAnimation = () => {
         if (this.isDead()) {
-            // Dead Animation
             SoundHub.stopSingle(this.SOUND_WALK);
             this.playDeadAnimationOnce();
             this.updateDeathFall();
+            return;
+        }
+
+        if (this.wasJumping && !this.isAboveGround()) {
+            this.wasJumping = false;
+            SoundHub.stopSingle(this.SOUND_WALK);
+            this.resetWalkAnimationStart();
+            return;
         } else if(this.isAboveGround()) {
-            // Jump Animation
+            this.wasJumping = true;
             SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_JUMP);
         } else if (this.isHurt()) {
-            // Hurt Animation
             SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_HURT);
         } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-            // Walk Animation
+            if (this.wasJumping) {
+                this.resetWalkAnimationStart();
+                this.wasJumping = false;
+            }
             this.playAnimation(this.IMAGES_WALK);
             SoundHub.playLoop(this.SOUND_WALK, 0.1);
         } else if (this.fallAsleep()){
-            // Sleep Animation
             SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_IDLE);
         } else {
             SoundHub.stopSingle(this.SOUND_WALK);
         };
+    }
+
+    /**
+     * Resets walk animation to the first frame.
+     * @returns {void}
+     */
+    resetWalkAnimationStart() {
+        this.currentImage = 0;
+        this.img = this.imageCache[this.IMAGES_WALK[0]];
     }
 
     /**
@@ -262,13 +280,10 @@ export class Character extends MovableObject{
 
     /**
      * Gravity update callback used by the base class interval hub.
+     * Allows the character to keep moving after death for the fall animation.
      * @returns {void}
      */
     gravityInterval = () => {
-        if (this.isDead()) {
-            return;
-        }
-
         if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
             this.speedY -= this.acceleration;

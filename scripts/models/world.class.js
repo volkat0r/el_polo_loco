@@ -28,6 +28,11 @@ export class World {
     loseSequenceStarted = false;
     winSequenceStarted = false;
 
+    /**
+     * Creates the world and starts gameplay loops.
+     * @param {HTMLCanvasElement} canvas
+     * @param {import("./keyboard.class.js").Keyboard} keyboard
+     */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
@@ -39,6 +44,10 @@ export class World {
     }
 
     // add endboss + healthbar to the world
+    /**
+     * Adds endboss and endboss status bar.
+     * @returns {void}
+     */
     initEndboss() {
         this.endboss = new Endboss();
         this.level.enemies.push(this.endboss);
@@ -46,6 +55,10 @@ export class World {
     }
 
     /* initialize world = this */
+    /**
+     * Links world reference to character and endboss.
+     * @returns {void}
+     */
     setWorld() {
         this.character.world = this;
         if (this.endboss) {
@@ -53,6 +66,10 @@ export class World {
         }
     }
 
+    /**
+     * Starts all gameplay check intervals.
+     * @returns {void}
+     */
     play() {
         IntervalHub.startInterval(this.checkCollision, 1000 / 60);
         IntervalHub.startInterval(this.checkThrowObjects, 1000 / 60);
@@ -63,6 +80,10 @@ export class World {
         IntervalHub.startInterval(this.checkEndConditions, 1000 / 20);
     }
 
+    /**
+     * Checks lose/win conditions and triggers end screen.
+     * @returns {void}
+     */
     checkEndConditions = () => {
         if (this.isStopped) return;
 
@@ -94,6 +115,10 @@ export class World {
     };
 
     /* collision */
+    /**
+     * Checks character collisions with enemies.
+     * @returns {void}
+     */
     checkCollision = () => {
         this.level.enemies.forEach(enemy => {
             if (enemy.isDying) return;
@@ -115,6 +140,11 @@ export class World {
         );
     };
 
+    /**
+     * Checks if a collision is a valid stomp hit.
+     * @param {import("./movable-object.class.js").MovableObject} enemy
+     * @returns {boolean}
+     */
     isStompCollision(enemy) {
         if (!this.character.isAboveGround()) return false;
         if (this.character.speedY > 0) return false;
@@ -125,6 +155,10 @@ export class World {
         return characterBottom <= enemyTop + 30;
     }
 
+    /**
+     * Checks if thrown bottles hit enemies.
+     * @returns {void}
+     */
     checkBottleHit = () => {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => {
@@ -150,6 +184,10 @@ export class World {
     };
 
     /* Throw bottles */
+    /**
+     * Throws a bottle when input and cooldown allow it.
+     * @returns {void}
+     */
     checkThrowObjects = () => {
         if (!this.keyboard.THROW) return;
         if (!this.throwReady || this.bottlesCollected <= 0) return;
@@ -172,6 +210,10 @@ export class World {
     };
 
     /* collect items */
+    /**
+     * Checks coin pickups and updates coin bar.
+     * @returns {void}
+     */
     checkCoinCollection = () => {
         this.level.coins.forEach(coin => {
             if (this.character.isCollidingOffset(coin)) {
@@ -187,6 +229,10 @@ export class World {
         );
     };
 
+    /**
+     * Checks bottle pickups and updates bottle bar.
+     * @returns {void}
+     */
     checkBottleCollection = () => {
         if (this.bottlesCollected >= 5) return;
 
@@ -205,6 +251,10 @@ export class World {
     };
 
     /* activate enbdoss */
+    /**
+     * Activates endboss when character reaches trigger area.
+     * @returns {void}
+     */
     checkEndbossActivation = () => {
         this.level.enemies.forEach(enemy => {
             if (!enemy.isEndboss) return;
@@ -218,6 +268,10 @@ export class World {
     };
 
     /* draw objects into world */
+    /**
+     * Draws world objects and schedules next frame.
+     * @returns {void}
+     */
     draw() {
         if (this.isStopped) return;
 
@@ -244,6 +298,10 @@ export class World {
         this.animationFrameId = requestAnimationFrame(() => this.draw());
     }
 
+    /**
+     * Stops all world updates and animation frame.
+     * @returns {void}
+     */
     stop() {
         if (this.isStopped) return;
 
@@ -256,17 +314,31 @@ export class World {
         }
     }
 
+    /**
+     * Updates camera position within level bounds.
+     * @returns {void}
+     */
     cameraUpdate() {
         this.camera_x = -this.character.x + 100;
         this.camera_x = Math.min(0, this.camera_x);
         this.camera_x = Math.max(this.camera_x, -this.level.level_end_x);
     }
 
+    /**
+     * Draws a list of drawable objects.
+     * @param {Array<import("./drawable-object.class.js").DrawableObject>} objects
+     * @returns {void}
+     */
     addObjectsToMap(objects) {
         if (!objects) return;
         objects.forEach(obj => this.addToMap(obj));
     }
 
+    /**
+     * Draws one object, including optional mirror draw.
+     * @param {import("./drawable-object.class.js").DrawableObject} mo
+     * @returns {void}
+     */
     addToMap(mo) {
         if (mo.otherDirection) this.flipImage(mo);
         mo.draw(this.ctx);
@@ -275,6 +347,11 @@ export class World {
         if (mo.otherDirection) this.flipImageBack(mo);
     }
 
+    /**
+     * Flips the canvas for left-facing sprites.
+     * @param {import("./drawable-object.class.js").DrawableObject} mo
+     * @returns {void}
+     */
     flipImage(mo){
         this.ctx.save();
         this.ctx.translate(mo.width, 0);
@@ -282,6 +359,11 @@ export class World {
         mo.x = mo.x * -1;
     }
 
+    /**
+     * Restores canvas after sprite flip.
+     * @param {import("./drawable-object.class.js").DrawableObject} mo
+     * @returns {void}
+     */
     flipImageBack(mo){
         mo.x = mo.x * -1;
         this.ctx.restore();
