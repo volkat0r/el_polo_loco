@@ -14,7 +14,8 @@ export class SoundHub {
         dead: new Audio("./assets/sounds/character/characterDead.wav")
     };
     static chicken = {
-        dead: new Audio("./assets/sounds/chicken/chickenDead.mp3")
+        dead: new Audio("./assets/sounds/chicken/chickenDead.mp3"),
+        dead_small: new Audio("./assets/sounds/chicken/chickenDead2.mp3")
     };
     static endboss = {
         entry: new Audio("./assets/sounds/endboss/endbossApproach.wav")
@@ -36,6 +37,7 @@ export class SoundHub {
         SoundHub.character.hurt,
         SoundHub.character.dead,
         SoundHub.chicken.dead,
+        SoundHub.chicken.dead_small,
         SoundHub.endboss.entry,
         SoundHub.collect.sound,
         SoundHub.gameStart.sound,
