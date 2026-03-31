@@ -11,16 +11,12 @@ export class Chicken extends MovableObject{
     width = 70;
     height = 55;
     isDying = false;
-    
-    // Image Hub
     CHICKEN_WALK = ImageHub.chicken_normal.walk;
     CHICKEN_DEAD = ImageHub.chicken_normal.dead;
-
-    // Sound Hub
     SOUND_DEAD = SoundHub.chicken.dead;
 
     /**
-     * Creates one chicken with random speed and position.
+     * Creates a chicken with random speed and position.
      */
     constructor(){
         super();

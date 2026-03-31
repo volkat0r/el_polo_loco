@@ -16,7 +16,7 @@ export class ChickenSmall extends MovableObject{
     CHICKEN_DEAD = ImageHub.chicken_small.dead;
 
     /**
-     * Creates one small chicken with random speed and position.
+     * Creates small chicken with random speed and position.
      */
     constructor(){
         super();
@@ -29,6 +29,7 @@ export class ChickenSmall extends MovableObject{
         this.speed = 0.15 + Math.random() * 1;
         this.animate();
         this.offset = {left: 0, right: 0, top: 0, bottom: 0};
+        SOUND_DEAD = SoundHub.chicken.dead;
     }
 
     /**
@@ -71,11 +72,19 @@ export class ChickenSmall extends MovableObject{
         this.isDying = true;
         this.speed = 0;
 
+        SoundHub.playOne(SoundHub.chicken.dead);
         IntervalHub.startTimeout(() => {
             this.markedForRemoval = true;
         }, 60);
     }
 
+        /**
+         * Plays chicken death sound.
+         * @returns {void}
+         */
+        deathSound() {
+            SoundHub.play(SoundHub.chicken.dead);
+        }
     /**
      * Returns true if chicken energy is zero.
      * @returns {boolean}

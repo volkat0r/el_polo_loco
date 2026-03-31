@@ -5,7 +5,7 @@ import { MovableObject } from "./movable-object.class.js";
 
 /**
  * Pepe with input handling, animation state management,
- * damage/death logic, and camera boundary movement constraints.
+ * damage/death logic, and camera movement.
  */
 export class Character extends MovableObject{
     x = 100;
@@ -59,7 +59,12 @@ export class Character extends MovableObject{
         this.animate();
         this.applyGravity();
 
-        this.offset = {left: 40, right: 40, top: 140, bottom: 15};
+        this.offset = {
+            left: 40,
+            right: 40,
+            top: 140,
+            bottom: 15
+        };
     }
 
     /**
@@ -122,7 +127,7 @@ export class Character extends MovableObject{
 
     /**
      * Applies keyboard input to movement and jump behavior.
-     * Stops processing once death state is reached.
+     * Stops once character is dead.
      * @returns {void}
      */
     inputCheck = () => {
@@ -147,7 +152,7 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Checks whether any relevant control input is currently active.
+     * Checks if any relevant control input is currently active.
      * @returns {boolean}
      */
     hasInput() {
@@ -161,6 +166,7 @@ export class Character extends MovableObject{
 
     /**
      * Computes the maximum x-position the character may move to.
+     * Allows character to move till the end of map
      * @returns {number}
      */
     getMaxCharacterX() {
@@ -220,6 +226,7 @@ export class Character extends MovableObject{
     }
 
     /**
+     * needs to be checked again!
      * Plays the death animation frames once and locks vertical position until
      * the sequence is complete.
      * @returns {void}
@@ -254,6 +261,7 @@ export class Character extends MovableObject{
     }
 
     /**
+     * this needs to be checked again / sometimes images of character are not displaying 
      * Moves the dead character downward after death animation has finished.
      * @returns {void}
      */
@@ -280,7 +288,7 @@ export class Character extends MovableObject{
 
     /**
      * Gravity update callback used by the base class interval hub.
-     * Allows the character to keep moving after death for the fall animation.
+     * Allows character to keep falling after death.
      * @returns {void}
      */
     gravityInterval = () => {

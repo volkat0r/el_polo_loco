@@ -1,7 +1,7 @@
 import { MovableObject } from "./movable-object.class.js";
 
 /**
- * Static background segment used to build the parallax world backdrop.
+ * Static background segment used to build the scrollable-effect (parallax).
  */
 export class BackgroundObject extends MovableObject{
     width = 720;
