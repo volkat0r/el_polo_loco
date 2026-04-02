@@ -6,6 +6,18 @@ export class SoundHub {
     static isMuted = false;
     static defaultVolume = 0.2;
 
+    /**
+     * Stores the desired audible volume per sound.
+     * @type {WeakMap<HTMLAudioElement, number>}
+     */
+    static soundVolumes = new WeakMap();
+
+    /**
+     * Tracks whether a sound should keep looping when audio is audible.
+     * @type {WeakMap<HTMLAudioElement, boolean>}
+     */
+    static loopingSounds = new WeakMap();
+
     static character = {
         walk: new Audio("./assets/sounds/character/characterRun.mp3"),
         jump: new Audio("./assets/sounds/character/characterJump.wav"),
@@ -60,6 +72,8 @@ export class SoundHub {
         SoundHub.sounds.forEach((sound) => {
             sound.preload = "auto";
             sound.loop = false;
+            SoundHub.soundVolumes.set(sound, SoundHub.defaultVolume);
+            SoundHub.loopingSounds.set(sound, false);
             sound.volume = SoundHub.isMuted ? 0 : SoundHub.defaultVolume;
         });
     }
@@ -71,8 +85,13 @@ export class SoundHub {
      * @returns {void}
      */
     static playOne(sound, volume = SoundHub.defaultVolume) {
-        if (!sound || SoundHub.isMuted) return;
+        if (!sound) return;
 
+        SoundHub.soundVolumes.set(sound, volume);
+        SoundHub.loopingSounds.set(sound, false);
+        sound.loop = false;
+
+        if (SoundHub.isMuted) return;
         sound.volume = volume;
         sound.currentTime = 0;
         sound.play().catch(() => {});
@@ -95,12 +114,37 @@ export class SoundHub {
      * @returns {void}
      */
     static playLoop(sound, volume = SoundHub.defaultVolume) {
-        if (!sound || SoundHub.isMuted) return;
+        if (!sound) return;
 
+        SoundHub.soundVolumes.set(sound, volume);
+        SoundHub.loopingSounds.set(sound, true);
         sound.loop = true;
+
+        // Ensure looping with explicit end-event handler for reliable playback
+        sound.removeEventListener('ended', SoundHub.handleSoundEnded);
+        sound.addEventListener('ended', SoundHub.handleSoundEnded);
+
+        if (SoundHub.isMuted) {
+            sound.volume = 0;
+            return;
+        }
+
         sound.volume = volume;
 
         if (sound.paused) {
+            sound.play().catch(() => {});
+        }
+    }
+
+    /**
+     * Handles ended event for looping sounds.
+     * @param {Event} e
+     * @returns {void}
+     */
+    static handleSoundEnded(e) {
+        const sound = e.target;
+        if (SoundHub.loopingSounds.get(sound)) {
+            sound.currentTime = 0;
             sound.play().catch(() => {});
         }
     }
@@ -114,6 +158,9 @@ export class SoundHub {
     static stopSingle(sound, reset = false) {
         if (!sound) return;
 
+        SoundHub.loopingSounds.set(sound, false);
+        sound.loop = false;
+        sound.removeEventListener('ended', SoundHub.handleSoundEnded);
         sound.pause();
         if (reset) {
             sound.currentTime = 0;
@@ -139,7 +186,12 @@ export class SoundHub {
     static unMuteAll() {
         SoundHub.isMuted = false;
         SoundHub.sounds.forEach((sound) => {
-            sound.volume = SoundHub.defaultVolume;
+            const volume = SoundHub.soundVolumes.get(sound) ?? SoundHub.defaultVolume;
+            sound.volume = volume;
+
+            if (SoundHub.loopingSounds.get(sound) && sound.paused) {
+                sound.play().catch(() => {});
+            }
         });
         SoundHub.saveMutedState();
     }
@@ -163,6 +215,7 @@ export class SoundHub {
      */
     static stopAll() {
         SoundHub.sounds.forEach((sound) => {
+            SoundHub.loopingSounds.set(sound, false);
             sound.pause();
             sound.currentTime = 0;
             sound.loop = false;

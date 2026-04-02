@@ -39,6 +39,7 @@ export class World {
         this.canvas = canvas;
         this.keyboard = keyboard;
         this.initEndboss(); /* ? */
+        this.StatusBarCoins.setTotalCoins(this.level.coins?.length ?? 0);
         this.setWorld();
         this.play();
         this.draw();
@@ -126,8 +127,10 @@ export class World {
             if (this.character.isCollidingOffset(enemy)){
                 if (this.isStompCollision(enemy)) {
                     enemy.dead();
+                    this.character.currentImage = 0;
                     this.character.speedY = 15;
                 } else {
+                    if (this.character.isAboveGround() || this.character.speedY > 0) return;
                     const tookDamage = this.character.hit(enemy);
                     if (tookDamage) {
                         this.StatusBarHealth.setPercentage(this.character.energy);

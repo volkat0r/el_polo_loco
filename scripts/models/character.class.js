@@ -27,9 +27,10 @@ export class Character extends MovableObject{
     DEATH_FALL_SPEED = 12;
     deathStartY = null;
     wasJumping = false;
-    jumpFrame = 0;
     IDLE_FRAME_INTERVAL_MS = 180;
     lastIdleFrameAt = 0;
+    JUMP_FRAME_INTERVAL_MS = 100;
+    lastJumpFrameAt = 0;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -93,20 +94,20 @@ export class Character extends MovableObject{
             return;
         }
 
-        if (this.wasJumping && !this.isAboveGround()) {
+        const isInAir = this.isAboveGround() || this.speedY > 0;
+
+        if (this.wasJumping && !isInAir) {
             this.wasJumping = false;
             SoundHub.stopSingle(this.SOUND_WALK);
             this.resetWalkAnimationStart();
             return;
-        } else if(this.isAboveGround()) {
-            if (!this.wasJumping) this.jumpFrame = 0;
+        } else if (isInAir) {
             this.wasJumping = true;
             SoundHub.stopSingle(this.SOUND_WALK);
-            if (this.jumpFrame < this.IMAGES_JUMP.length) {
-                this.img = this.imageCache[this.IMAGES_JUMP[this.jumpFrame]];
-                this.jumpFrame++;
-            } else {
-                this.img = this.imageCache[this.IMAGES_JUMP[this.IMAGES_JUMP.length - 1]];
+            const now = Date.now();
+            if (now - this.lastJumpFrameAt >= this.JUMP_FRAME_INTERVAL_MS) {
+                this.playAnimation(this.IMAGES_JUMP);
+                this.lastJumpFrameAt = now;
             }
         } else if (this.isHurt()) {
             SoundHub.stopSingle(this.SOUND_WALK);

@@ -6,6 +6,8 @@ import { DrawableObject } from "./drawable-object.class.js";
  */
 export class StatusBarCoins extends DrawableObject{
     percentage;
+    totalCoins = 0;
+    collectedCoins = 0;
     imageCache = {};
 
     // Image Hub
@@ -36,13 +38,38 @@ export class StatusBarCoins extends DrawableObject{
     }
 
     /**
-     * Increases coin bar by 20.
+     * Configures how many coins are available in the current level.
+     * @param {number} totalCoins
+     * @returns {void}
+     */
+    setTotalCoins(totalCoins) {
+        this.totalCoins = Math.max(0, totalCoins);
+        this.collectedCoins = 0;
+        this.updateByCollectedCoins();
+    }
+
+    /**
+     * Increases collected coin counter by one and updates the bar.
      * @returns {void}
      */
     collectCoin() {
-        this.percentage += 20;
-        this.percentage = Math.min(100, this.percentage);
-        this.setPercentage(this.percentage);
+        this.collectedCoins += 1;
+        this.collectedCoins = Math.min(this.collectedCoins, this.totalCoins);
+        this.updateByCollectedCoins();
+    }
+
+    /**
+     * Converts collected coins to percent and refreshes the bar.
+     * @returns {void}
+     */
+    updateByCollectedCoins() {
+        if (this.totalCoins <= 0) {
+            this.setPercentage(0);
+            return;
+        }
+
+        const percentage = (this.collectedCoins / this.totalCoins) * 100;
+        this.setPercentage(percentage);
     }
 
     /**
