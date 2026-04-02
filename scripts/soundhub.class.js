@@ -29,6 +29,9 @@ export class SoundHub {
     static throwable = {
         sound: new Audio("./assets/sounds/throwable/bottleBreak.mp3")
     };
+    static bg = {
+        music: new Audio("./assets/sounds/bgmusic/Guitar Cartwheel - Loop - Medium.mp3")
+    };
 
     static sounds = [
         SoundHub.character.walk,
@@ -41,7 +44,8 @@ export class SoundHub {
         SoundHub.endboss.entry,
         SoundHub.collect.sound,
         SoundHub.gameStart.sound,
-        SoundHub.throwable.sound
+        SoundHub.throwable.sound,
+        SoundHub.bg.music
     ];
 
     static Sounds = SoundHub.sounds;

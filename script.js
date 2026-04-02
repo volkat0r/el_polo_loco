@@ -16,6 +16,9 @@ let screenHomeBtn;
 let muteButton;
 let unmuteButton;
 let fullscreenButton;
+let instructionsModal;
+let instructionsOpenButton;
+let instructionsCloseButton;
 
 const SCREEN_BUTTON_IMAGES = {
     start: "./assets/img/play-key.webp",
@@ -46,6 +49,9 @@ function init(){
     muteButton = document.querySelector(".overlay-symbols .mute");
     unmuteButton = document.querySelector(".overlay-symbols .unmute");
     fullscreenButton = document.getElementById("fullscreen-btn");
+    instructionsModal = document.getElementById("instructions-modal");
+    instructionsOpenButton = document.getElementById("instructions-open-btn");
+    instructionsCloseButton = document.getElementById("instructions-close-btn");
     ctx = canvas.getContext('2d');
 
     SoundHub.init();
@@ -77,6 +83,22 @@ function init(){
 
     fullscreenButton?.addEventListener("click", () => {
         toggleFullscreen();
+    });
+
+    instructionsOpenButton?.addEventListener("click", () => {
+        openInstructionsModal();
+    });
+
+    instructionsCloseButton?.addEventListener("click", () => {
+        closeInstructionsModal();
+    });
+
+    instructionsModal?.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (target.dataset.closeInstructions === "true") {
+            closeInstructionsModal();
+        }
     });
 }
 
@@ -125,6 +147,7 @@ function startGame() {
     world = new World(canvas, keyboard);
     window.world = world;
     SoundHub.playOne(SoundHub.gameStart.sound);
+    SoundHub.playLoop(SoundHub.bg.music, 0.15);
 }
 
 /**
@@ -273,6 +296,24 @@ function hideOverlay() {
 }
 
 /**
+ * Opens the instructions modal.
+ * @returns {void}
+ */
+function openInstructionsModal() {
+    if (!instructionsModal) return;
+    instructionsModal.classList.remove("hidden");
+}
+
+/**
+ * Closes the instructions modal.
+ * @returns {void}
+ */
+function closeInstructionsModal() {
+    if (!instructionsModal) return;
+    instructionsModal.classList.add("hidden");
+}
+
+/**
  * Resets all keyboard input flags.
  * @returns {void}
  */
@@ -294,6 +335,10 @@ window.addEventListener('keydown', (event) => {
 })
 
 window.addEventListener('keyup', (event) => {
+    if (event.code === "Escape") {
+        closeInstructionsModal();
+    }
+
     if (!world) return; 
     if (event.code === "ArrowRight" || event.code === "KeyD") keyboard.RIGHT = false;
     if (event.code === "ArrowLeft" || event.code === "KeyA") keyboard.LEFT = false;
@@ -320,18 +365,22 @@ function registerTouchControls() {
         if (!btn) return;
 
         btn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
+            if (e.cancelable) {
+                e.preventDefault();
+            }
             keyboard[key] = true;
             btn.classList.add('pressed');
         }, { passive: false });
 
         const release = (e) => {
-            e.preventDefault();
+            if (e.cancelable) {
+                e.preventDefault();
+            }
             keyboard[key] = false;
             btn.classList.remove('pressed');
         };
 
-        btn.addEventListener('touchend',    release, { passive: false });
+        btn.addEventListener('touchend', release, { passive: false });
         btn.addEventListener('touchcancel', release, { passive: false });
     });
 }

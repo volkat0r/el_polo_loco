@@ -4,13 +4,34 @@
     --touch-controls-height: 84px;
 }
 
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
 body{
     background-image: url(./assets/img/epl_background.jpg);
     width: 100%;
     object-fit: cover;
-    background-position: 0 50%;
+    background-position: 0 60%;
     background-repeat: no-repeat;
     background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header,
+footer {
+    flex: 0 0 auto;
+}
+
+main {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    padding: 8px 0 10px;
 }
 
 h1{
@@ -18,15 +39,34 @@ h1{
     color: #a0220a;
 }
 
+header h1 {
+    margin: 0.4rem 0;
+    font-size: clamp(1.8rem, 4.8vw, 5.5rem);
+    line-height: 1;
+    padding-top: 5rem;
+}
+
+footer {
+    padding-bottom: 0.4rem;
+}
+
 .container {
     position: relative;
     width: min(92vw, 720px);
     margin: 0 auto;
 }
+.inter-link{
+    font-family: "Chimichanga";
+    color: #a0220a;
+    font-size: 2rem;
+    &:hover{
+        color: #223c33
+    }
+}
+
 /* #endregion */
 
 /* #region - Canvas & Overlay-Wrapper */
-
 /* Canvas */
 #canvas {
     display: block;
@@ -167,6 +207,28 @@ h1{
     }
 }
 
+.instructions-btn {
+    width: 3rem;
+    height: 3rem;
+    border: 0;
+    color: #fff7e2;
+    font-family: "Chimichanga", sans-serif;
+    font-size: 1.6rem;
+    line-height: 1;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: transform 120ms ease, opacity 120ms ease;
+}
+
+.instructions-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.instructions-btn:active {
+    transform: translateY(0);
+}
+
 .fullscreen-btn-wrapper {
     display: none;
 }
@@ -197,7 +259,45 @@ h1{
 
 
 /* #region - instructions*/
-div.instructions{
+.instructions-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.instructions-modal.hidden {
+    display: none;
+}
+
+.instructions-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(2px);
+}
+
+.instructions-modal__panel {
+    position: relative;
+    z-index: 1;
+}
+
+.instructions-close-btn {
+    position: absolute;
+    top: 1.5rem;
+    right: 2rem;
+    width: 1.5rem;
+    width: 1.5rem;
+    color: #223c33;
+    font-size: 2.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.instructions {
     text-align: center;
     h2{
         font-size: 2.5rem;
@@ -220,13 +320,27 @@ div.instructions{
             }
         }
     }
-    width: 35rem;
+    width: min(35rem, 92vw);
     height: auto;
     background-image: url("./assets/img/wodden-sign.webp");
     background-size: 100%;
     padding: 1rem 3rem;
     color: white;
 }
+/* #endregion */
+
+/* #region - Imprint */
+#imprint-content {
+    padding: 4rem;
+    text-align: center;
+    width: 40rem;
+    height: auto;
+    background-image: url("./assets/img/wodden-sign.webp");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    color: white;
+}
+
 /* #endregion */
 
 /* #region - Responsive Touch-Btns */
@@ -324,8 +438,7 @@ div.instructions{
         overflow: hidden;
     }
 
-    header,
-    div.instructions {
+    header {
         display: none;
     }
     main {
@@ -366,6 +479,29 @@ div.instructions{
         padding: 12px;
         gap: 8px;
     }
+
+    .instructions {
+        width: min(32rem, 94vw);
+        padding: 0.8rem 2.4rem;
+    }
+
+    .instructions h2 {
+        font-size: 2rem;
+    }
+
+    .instructions ul li {
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .instructions ul li img {
+        height: 2.4rem;
+    }
+
+    .instructions-close-btn {
+        top: 6px;
+        right: 8px;
+    }
     #screen-title {
         font-size: clamp(1.4rem, 4vw, 2.4rem);
     }
@@ -378,6 +514,19 @@ div.instructions{
     .screen-overlay {
         padding: 16px;
         gap: 10px;
+    }
+
+    .instructions {
+        width: min(34rem, 96vw);
+        padding: 1rem 2.2rem;
+    }
+
+    .instructions h2 {
+        font-size: 2rem;
+    }
+
+    .instructions ul li {
+        font-size: 1rem;
     }
 }
 /* #endregion */

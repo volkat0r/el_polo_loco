@@ -10,6 +10,7 @@ import { ThrowableObject } from "./throwable-object.class.js";
 import { SoundHub } from "../soundhub.class.js";
 
 export class World {
+    THROW_COOLDOWN_MS = 900;
     ctx;
     keyboard;
     level = createLevel1();
@@ -206,7 +207,7 @@ export class World {
         this.StatusBarBottles.throwBottle();
 
         this.throwReady = false;
-        IntervalHub.startTimeout(() => this.throwReady = true, 500);
+        IntervalHub.startTimeout(() => this.throwReady = true, this.THROW_COOLDOWN_MS);
     };
 
     /* collect items */

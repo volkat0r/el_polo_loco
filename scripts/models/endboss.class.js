@@ -23,6 +23,8 @@ export class Endboss extends MovableObject {
     world;
     moveDirection = -1;
     DEAD_ANIMATION_INTERVAL_MS = 150;
+    DAMAGE_IMMUNITY_MS = 1000;
+    lastHitAt = 0;
     ENDBOSS_WALK = ImageHub.end_boss.walk;
     ENDBOSS_ALERT = ImageHub.end_boss.alert;
     ENDBOSS_ATTACK = ImageHub.end_boss.attack;
@@ -109,9 +111,11 @@ export class Endboss extends MovableObject {
      */
     hit(damage = 20) {
         if (this.isDying) return;
+        if (this.isRecentlyHit()) return;
 
         this.isHurt = true;
         this.hurtAnimationFrame = 0;
+        this.lastHitAt = Date.now();
 
         this.hitCount++;
         if (this.hitCount >= 2) {
@@ -127,6 +131,14 @@ export class Endboss extends MovableObject {
             this.energy = 0;
             this.dead();
         }
+    }
+
+    /**
+     * Returns whether the boss is still inside its post-hit immunity window.
+     * @returns {boolean}
+     */
+    isRecentlyHit() {
+        return Date.now() - this.lastHitAt < this.DAMAGE_IMMUNITY_MS;
     }
 
     /**

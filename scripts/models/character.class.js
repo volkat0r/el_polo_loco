@@ -27,6 +27,9 @@ export class Character extends MovableObject{
     DEATH_FALL_SPEED = 12;
     deathStartY = null;
     wasJumping = false;
+    jumpFrame = 0;
+    IDLE_FRAME_INTERVAL_MS = 180;
+    lastIdleFrameAt = 0;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -52,6 +55,7 @@ export class Character extends MovableObject{
         this.showOffsetFrame = false;
         this.loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_IDLE_LONG);
         this.loadImages(this.IMAGES_WALK);
         this.loadImages(this.IMAGES_JUMP);
         this.loadImages(this.IMAGES_HURT);
@@ -95,9 +99,15 @@ export class Character extends MovableObject{
             this.resetWalkAnimationStart();
             return;
         } else if(this.isAboveGround()) {
+            if (!this.wasJumping) this.jumpFrame = 0;
             this.wasJumping = true;
             SoundHub.stopSingle(this.SOUND_WALK);
-            this.playAnimation(this.IMAGES_JUMP);
+            if (this.jumpFrame < this.IMAGES_JUMP.length) {
+                this.img = this.imageCache[this.IMAGES_JUMP[this.jumpFrame]];
+                this.jumpFrame++;
+            } else {
+                this.img = this.imageCache[this.IMAGES_JUMP[this.IMAGES_JUMP.length - 1]];
+            }
         } else if (this.isHurt()) {
             SoundHub.stopSingle(this.SOUND_WALK);
             this.playAnimation(this.IMAGES_HURT);
@@ -108,12 +118,15 @@ export class Character extends MovableObject{
             }
             this.playAnimation(this.IMAGES_WALK);
             SoundHub.playLoop(this.SOUND_WALK, 0.1);
-        } else if (this.fallAsleep()){
-            SoundHub.stopSingle(this.SOUND_WALK);
-            this.playAnimation(this.IMAGES_IDLE);
         } else {
             SoundHub.stopSingle(this.SOUND_WALK);
-        };
+            const now = Date.now();
+            if (now - this.lastIdleFrameAt >= this.IDLE_FRAME_INTERVAL_MS) {
+                const idleImages = this.fallAsleep() ? this.IMAGES_IDLE_LONG : this.IMAGES_IDLE;
+                this.playAnimation(idleImages);
+                this.lastIdleFrameAt = now;
+            }
+        }
     }
 
     /**
