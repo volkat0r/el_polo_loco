@@ -5,6 +5,7 @@ export class DrawableObject{
     img;
     imageCache = {};
     currentImage = 0;
+    lastRenderableImg = null;
     x = 120;
     y = 280;
     width = 100;
@@ -16,8 +17,12 @@ export class DrawableObject{
      * @returns {void}
      */
     loadImage(path){
-        this.img = new Image(); // Image is an object which is already existing & creates a img-tag just in js
-        this.img.src = path;
+        const img = new Image();
+        img.onload = () => {
+            this.lastRenderableImg = img;
+        };
+        img.src = path;
+        this.img = img;
     }
 
     /**
@@ -28,9 +33,23 @@ export class DrawableObject{
     loadImages(imageArray) {
         imageArray.forEach((path) => {
             const img = new Image();
+            img.onload = () => {
+                if (!this.lastRenderableImg) {
+                    this.lastRenderableImg = img;
+                }
+            };
             img.src = path;
             this.imageCache[path] = img;
         });
+    }
+
+    /**
+     * Checks whether an image finished loading and can be drawn.
+     * @param {HTMLImageElement | undefined} img
+     * @returns {boolean}
+     */
+    isRenderableImage(img) {
+        return !!img && img.complete && img.naturalWidth > 0;
     }
 
     /**
@@ -39,7 +58,11 @@ export class DrawableObject{
      * @returns {void}
      */
     draw(ctx){
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        const renderImg = this.isRenderableImage(this.img) ? this.img : this.lastRenderableImg;
+        if (!this.isRenderableImage(renderImg)) return;
+
+        this.lastRenderableImg = renderImg;
+        ctx.drawImage(renderImg, this.x, this.y, this.width, this.height);
     }
 
     /**

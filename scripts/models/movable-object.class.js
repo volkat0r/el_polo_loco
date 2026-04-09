@@ -49,8 +49,7 @@ export class MovableObject extends DrawableObject{
      * @returns {void}
      */
     loadImage(path){
-        this.img = new Image(); // Image is an object which is already existing & creates a img-tag just in js
-        this.img.src = path;
+        super.loadImage(path);
     }
 
     /**
@@ -59,7 +58,7 @@ export class MovableObject extends DrawableObject{
      * @returns {void}
      */
     draw(ctx){
-        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+        super.draw(ctx);
     }
 
     /**
@@ -68,9 +67,17 @@ export class MovableObject extends DrawableObject{
      * @returns {void}
      */
     playAnimation(images){
+        if (!images?.length) return;
+
         const index = this.currentImage % images.length;
         const path = images[index];
-        this.img = this.imageCache[path];
+        const nextImg = this.imageCache[path];
+
+        if (this.isRenderableImage(nextImg)) {
+            this.img = nextImg;
+            this.lastRenderableImg = nextImg;
+        }
+
         this.currentImage++;
     }
 
