@@ -168,7 +168,6 @@ function updateLongIdleSnoreState(character, inLongIdle) {
         SoundHub.playLoop(character.SOUND_IDLE, 0.1);
         character.isInLongIdle = true;
     }
-
     if (!inLongIdle && character.isInLongIdle) character.stopLongIdleSnore();
 }
 
@@ -196,7 +195,6 @@ function handleHorizontalInput(character) {
         character.moveRight();
         character.otherDirection = false;
     }
-
     if (character.world.keyboard.LEFT && character.x > 0) {
         character.otherDirection = true;
         character.moveLeft();
@@ -244,7 +242,6 @@ function playDamageFeedbackSound(character) {
         SoundHub.playOne(character.SOUND_DEAD);
         return;
     }
-
     SoundHub.playOne(character.SOUND_HURT);
 }
 
@@ -297,6 +294,5 @@ function advanceDeathFrame(character) {
         character.deathAnimationDone = true;
         return;
     }
-
     character.deathAnimationFrame++;
 }
