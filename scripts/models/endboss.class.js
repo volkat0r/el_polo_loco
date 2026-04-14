@@ -32,8 +32,8 @@ export class Endboss extends MovableObject {
     ENDBOSS_DEAD = ImageHub.end_boss.dead;
 
     /**
-     * Creates the endboss and preloads its sprites.
-     */
+    * Creates the endboss and preloads its sprites.
+    */
     constructor() {
         super();
         this.loadImage('./assets/img/4_enemie_boss_chicken/1_walk/G1.png');
@@ -49,23 +49,22 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Activates the endboss behavior loops.
-     * @returns {void}
-     */
+    * Activates the endboss behavior loops.
+    * @returns {void}
+    */
     activate() {
         if (this.isActive) return;
         this.isActive = true;
         this.isAlerting = true;
         this.alertAnimationFrame = 0;
-        
         this.startMovement();
         this.startAnimation();
     }
 
     /**
-     * Starts movement loop for the endboss.
-     * @returns {void}
-     */
+    * Starts movement loop for the endboss.
+    * @returns {void}
+    */
     startMovement() {
         IntervalHub.startInterval(() => {
             if (this.isDying) return;
@@ -75,9 +74,9 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Starts animation loop based on current state.
-     * @returns {void}
-     */
+    * Starts animation loop based on current state.
+    * @returns {void}
+    */
     startAnimation() {
         IntervalHub.startInterval(() => {
             this.runAnimationTick();
@@ -85,9 +84,9 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Runs one animation update tick based on current boss state.
-     * @returns {void}
-     */
+    * Runs one animation update tick based on current boss state.
+    * @returns {void}
+    */
     runAnimationTick() {
         if (this.isDying) return this.playDeadAnimationOnce();
         if (this.isAlerting) return this.playAlertAnimationOnce();
@@ -97,10 +96,10 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Applies damage and updates boss state.
-     * @param {number} [damage=20]
-     * @returns {void}
-     */
+    * Applies damage and updates boss state.
+    * @param {number} [damage=20]
+    * @returns {void}
+    */
     hit(damage = 20) {
         if (this.isDying) return;
         if (this.isRecentlyHit()) return;
@@ -110,9 +109,9 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Marks temporary hurt state and starts hit cooldown.
-     * @returns {void}
-     */
+    * Marks temporary hurt state and starts hit cooldown.
+    * @returns {void}
+    */
     markHitState() {
         this.isHurt = true;
         this.hurtAnimationFrame = 0;
@@ -120,9 +119,9 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Increases aggression based on hit count.
-     * @returns {void}
-     */
+    * Increases aggression based on hit count.
+    * @returns {void}
+    */
     updateAggression() {
         this.hitCount++;
         if (this.hitCount >= 2) this.isTilted = true;
@@ -130,10 +129,10 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Applies incoming damage and triggers death when energy reaches zero.
-     * @param {number} damage
-     * @returns {void}
-     */
+    * Applies incoming damage and triggers death when energy reaches zero.
+    * @param {number} damage
+    * @returns {void}
+    */
     applyDamage(damage) {
         this.energy -= damage;
         if (this.energy > 0) return;
@@ -142,20 +141,19 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Returns whether the boss is still inside its post-hit immunity window.
-     * @returns {boolean}
-     */
+    * Returns whether the boss is still inside its post-hit immunity window.
+    * @returns {boolean}
+    */
     isRecentlyHit() {
         return Date.now() - this.lastHitAt < this.DAMAGE_IMMUNITY_MS;
     }
 
     /**
-     * Starts death state and stops movement.
-     * @returns {void}
-     */
+    * Starts death state and stops movement.
+    * @returns {void}
+    */
     dead() {
         if (this.isDying) return;
-
         this.isDying = true;
         this.speed = 0;
         this.deathAnimationFrame = 0;
@@ -163,74 +161,65 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Plays dead animation once.
-     * @returns {void}
-     */
+    * Plays dead animation once.
+    * @returns {void}
+    */
     playDeadAnimationOnce() {
         const lastFrameIndex = this.ENDBOSS_DEAD.length - 1;
         const frameIndex = Math.min(this.deathAnimationFrame, lastFrameIndex);
         const framePath = this.ENDBOSS_DEAD[frameIndex];
-
         this.img = this.imageCache[framePath];
-
         if (this.deathAnimationFrame < lastFrameIndex) {
             this.deathAnimationFrame++;
             return;
         }
-
         this.deathAnimationDone = true;
     }
 
     /**
-     * Plays alert animation once.
-     * @returns {void}
-     */
+    * Plays alert animation once.
+    * @returns {void}
+    */
     playAlertAnimationOnce() {
         const lastFrameIndex = this.ENDBOSS_ALERT.length - 1;
         const frameIndex = Math.min(this.alertAnimationFrame, lastFrameIndex);
         const framePath = this.ENDBOSS_ALERT[frameIndex];
-
         this.img = this.imageCache[framePath];
-
         if (this.alertAnimationFrame < lastFrameIndex) {
             this.alertAnimationFrame++;
             return;
         }
-
         this.isAlerting = false;
     }
 
     /**
-     * Plays hurt animation once.
-     * @returns {void}
-     */
+    * Plays hurt animation once.
+    * @returns {void}
+    */
     playHurtAnimationOnce() {
         const lastFrameIndex = this.ENDBOSS_HURT.length - 1;
         const frameIndex = Math.min(this.hurtAnimationFrame, lastFrameIndex);
         const framePath = this.ENDBOSS_HURT[frameIndex];
-
         this.img = this.imageCache[framePath];
-
         if (this.hurtAnimationFrame < lastFrameIndex) {
             this.hurtAnimationFrame++;
             return;
         }
-
         this.isHurt = false;
     }
 
     /**
-     * Returns total dead animation time in ms.
-     * @returns {number}
-     */
+    * Returns total dead animation time in ms.
+    * @returns {number}
+    */
     getDeathAnimationDurationMs() {
         return this.ENDBOSS_DEAD.length * this.DEAD_ANIMATION_INTERVAL_MS;
     }
 
     /**
-     * Moves the endboss inside level borders.
-     * @returns {void}
-     */
+    * Moves the endboss inside level borders.
+    * @returns {void}
+    */
     watchingLevel() {
         if (!this.world) return;
         this.updateDirectionByCharacter();
@@ -238,31 +227,30 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Reverses movement direction when character is behind boss.
-     * @returns {void}
-     */
+    * Reverses movement direction when character is behind boss.
+    * @returns {void}
+    */
     updateDirectionByCharacter() {
         if (!this.characterIsBehind()) return;
         this.moveDirection *= -1;
     }
 
     /**
-     * Moves boss left or right while respecting map bounds.
-     * @returns {void}
-     */
+    * Moves boss left or right while respecting map bounds.
+    * @returns {void}
+    */
     moveInsideBounds() {
         if (this.moveDirection < 0) {
             this.moveLeftWithinBounds();
             return;
         }
-
         this.moveRightWithinBounds();
     }
 
     /**
-     * Moves boss to the left and clamps at minimum x.
-     * @returns {void}
-     */
+    * Moves boss to the left and clamps at minimum x.
+    * @returns {void}
+    */
     moveLeftWithinBounds() {
         this.otherDirection = false;
         this.x -= this.speed;
@@ -272,9 +260,9 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Moves boss to the right and clamps at maximum x.
-     * @returns {void}
-     */
+    * Moves boss to the right and clamps at maximum x.
+    * @returns {void}
+    */
     moveRightWithinBounds() {
         this.otherDirection = true;
         this.x += this.speed;
@@ -284,32 +272,30 @@ export class Endboss extends MovableObject {
     }
 
     /**
-     * Checks if character is behind current move direction.
-     * @returns {boolean}
-     */
+    * Checks if character is behind current move direction.
+    * @returns {boolean}
+    */
     characterIsBehind() {
         let charCenter = this.world.character.x + this.world.character.width / 2;
         let bossCenter = this.x + this.width / 2;
-
         if (this.moveDirection < 0) {
             return charCenter > bossCenter + 20;
         }
-
         return charCenter < bossCenter - 20;
     }
 
     /**
-     * Returns left movement limit.
-     * @returns {number}
-     */
+    * Returns left movement limit.
+    * @returns {number}
+    */
     getMinX() {
         return 0;
     }
 
     /**
-     * Returns right movement limit.
-     * @returns {number}
-     */
+    * Returns right movement limit.
+    * @returns {number}
+    */
     getMaxX() {
         return this.world.level.level_end_x + this.world.canvas.width - this.width;
     }

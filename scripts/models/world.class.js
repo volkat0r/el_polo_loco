@@ -44,10 +44,10 @@ export class World {
     winSequenceStarted = false;
 
     /**
-     * Creates the world and starts gameplay loops.
-     * @param {HTMLCanvasElement} canvas
-     * @param {import("./keyboard.class.js").Keyboard} keyboard
-     */
+    * Creates the world and starts gameplay loops.
+    * @param {HTMLCanvasElement} canvas
+    * @param {import("./keyboard.class.js").Keyboard} keyboard
+    */
     constructor(canvas, keyboard) {
         this.ctx = canvas.getContext("2d");
         this.canvas = canvas;
@@ -60,9 +60,9 @@ export class World {
     }
 
     /**
-     * Adds endboss and endboss status bar.
-     * @returns {void}
-     */
+    * Adds endboss and endboss status bar.
+    * @returns {void}
+    */
     initEndboss() {
         this.endboss = new Endboss();
         this.level.enemies.push(this.endboss);
@@ -70,9 +70,9 @@ export class World {
     }
 
     /**
-     * Links world reference to character and endboss.
-     * @returns {void}
-     */
+    * Links world reference to character and endboss.
+    * @returns {void}
+    */
     setWorld() {
         this.character.world = this;
         if (this.endboss) {
@@ -81,9 +81,9 @@ export class World {
     }
 
     /**
-     * Starts all gameplay check intervals.
-     * @returns {void}
-     */
+    * Starts all gameplay check intervals.
+    * @returns {void}
+    */
     play() {
         IntervalHub.startInterval(this.checkCollision, 1000 / 60);
         IntervalHub.startInterval(this.checkThrowObjects, 1000 / 60);
@@ -95,9 +95,9 @@ export class World {
     }
 
     /**
-     * Checks lose/win conditions and triggers end screen.
-     * @returns {void}
-     */
+    * Checks lose/win conditions and triggers end screen.
+    * @returns {void}
+    */
     checkEndConditions = () => {
         if (this.isStopped) return;
         if (handleLoseCondition(this)) return;
@@ -105,33 +105,31 @@ export class World {
     };
 
     /**
-     * Checks character collisions with enemies.
-     * @returns {void}
-     */
+    * Checks character collisions with enemies.
+    * @returns {void}
+    */
     checkCollision = () => {
         this.level.enemies.forEach(enemy => handleEnemyCollision(this, enemy));
         removeMarkedEnemies(this);
     }
 
     /**
-     * Checks if a collision is a valid stomp hit.
-     * @param {import("./movable-object.class.js").MovableObject} enemy
-     * @returns {boolean}
-     */
+    * Checks if a collision is a valid stomp hit.
+    * @param {import("./movable-object.class.js").MovableObject} enemy
+    * @returns {boolean}
+    */
     isStompCollision(enemy) {
         if (!this.character.isAboveGround()) return false;
         if (this.character.speedY > 0) return false;
-
         const characterBottom = this.character.y + this.character.height - this.character.offset.bottom;
         const enemyTop = enemy.y + enemy.offset.top;
-
         return characterBottom <= enemyTop + 30;
     }
 
     /**
-     * Checks if thrown bottles hit enemies.
-     * @returns {void}
-     */
+    * Checks if thrown bottles hit enemies.
+    * @returns {void}
+    */
     checkBottleHit = () => {
         this.throwableObjects.forEach(bottle => {
             this.level.enemies.forEach(enemy => handleBottleEnemyCollision(this, bottle, enemy));
@@ -140,9 +138,9 @@ export class World {
     }
 
     /**
-     * Throws a bottle when input and cooldown allow it.
-     * @returns {void}
-     */
+    * Throws a bottle when input and cooldown allow it.
+    * @returns {void}
+    */
     checkThrowObjects = () => {
         if (!canThrowBottle(this)) return;
         this.throwableObjects.push(createThrowableBottle(this));
@@ -151,18 +149,18 @@ export class World {
     }
 
     /**
-     * Checks coin pickups and updates coin bar.
-     * @returns {void}
-     */
+    * Checks coin pickups and updates coin bar.
+    * @returns {void}
+    */
     checkCoinCollection = () => {
         this.level.coins.forEach(coin => collectCoinIfColliding(this, coin));
         this.level.coins = this.level.coins.filter(coin => !coin.markedForRemoval);
     };
 
     /**
-     * Checks bottle pickups and updates bottle bar.
-     * @returns {void}
-     */
+    * Checks bottle pickups and updates bottle bar.
+    * @returns {void}
+    */
     checkBottleCollection = () => {
         if (this.bottlesCollected >= 5) return;
         this.level.bottles.forEach(bottle => collectBottleIfColliding(this, bottle));
@@ -170,17 +168,17 @@ export class World {
     }
 
     /**
-     * Activates endboss when character reaches trigger area.
-     * @returns {void}
-     */
+    * Activates endboss when character reaches trigger area.
+    * @returns {void}
+    */
     checkEndbossActivation = () => {
         this.level.enemies.forEach(enemy => activateEndbossIfNeeded(this, enemy));
     };
 
     /**
-     * Draws world objects and schedules next frame.
-     * @returns {void}
-     */
+    * Draws world objects and schedules next frame.
+    * @returns {void}
+    */
     draw() {
         if (this.isStopped) return;
         prepareFrame(this);
@@ -190,15 +188,13 @@ export class World {
     }
 
     /**
-     * Stops all world updates and animation frame.
-     * @returns {void}
-     */
+    * Stops all world updates and animation frame.
+    * @returns {void}
+    */
     stop() {
         if (this.isStopped) return;
-
         this.isStopped = true;
         IntervalHub.clearAll();
-
         if (this.animationFrameId) {
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
@@ -206,9 +202,9 @@ export class World {
     }
 
     /**
-     * Updates camera position within level bounds.
-     * @returns {void}
-     */
+    * Updates camera position within level bounds.
+    * @returns {void}
+    */
     cameraUpdate() {
         this.camera_x = -this.character.x + 100;
         this.camera_x = Math.min(0, this.camera_x);

@@ -5,9 +5,9 @@ import { applyCharacterHit, playCharacterDeathAnimation, processCharacterInput, 
 import { MovableObject } from "./movable-object.class.js";
 
 /**
- * Pepe with input handling, animation state management,
- * damage/death logic, and camera movement.
- */
+* Pepe with input handling, animation state management,
+* damage/death logic, and camera movement.
+*/
 export class Character extends MovableObject{
     x = 100;
     y = 0;
@@ -50,8 +50,8 @@ export class Character extends MovableObject{
     SOUND_DEAD = SoundHub.character.dead;
 
     /**
-     * Creates a new character instance and preloads all animation frames.
-     */
+    * Creates a new character instance and preloads all animation frames.
+    */
     constructor(){
         super();
         this.showFrame = false;
@@ -63,9 +63,9 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Preloads all character sprite image groups.
-     * @returns {void}
-     */
+    * Preloads all character sprite image groups.
+    * @returns {void}
+    */
     preloadCharacterImages() {
         this.loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_IDLE);
@@ -77,35 +77,35 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Sets collision offsets for the character.
-     * @returns {void}
-     */
+    * Sets collision offsets for the character.
+    * @returns {void}
+    */
     setCharacterOffset() {
         this.offset = { left: 40, right: 40, top: 140, bottom: 15 };
     }
 
     /**
-     * Starts the character update loops for input and animation selection.
-     * Input is updated at high frequency for responsiveness.
-     */
+    * Starts the character update loops for input and animation selection.
+    * Input is updated at high frequency for responsiveness.
+    */
     animate(){
         IntervalHub.startInterval(this.inputCheck, 1000 / 120);
         IntervalHub.startInterval(this.selectAnimation, 1000 / 20);
     }
 
     /**
-     * Chooses and plays the current animation based on state priority:
-     * dead, jump, hurt, walk, idle.
-     * @returns {void}
-     */
+    * Chooses and plays the current animation based on state priority:
+    * dead, jump, hurt, walk, idle.
+    * @returns {void}
+    */
     selectAnimation = () => {
         selectCharacterAnimation(this);
     }
 
     /**
-     * Stops long-idle snore loop and resets its state flag.
-     * @returns {void}
-     */
+    * Stops long-idle snore loop and resets its state flag.
+    * @returns {void}
+    */
     stopLongIdleSnore() {
         if (!this.isInLongIdle) return;
         SoundHub.stopSingle(this.SOUND_IDLE);
@@ -113,27 +113,27 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Resets walk animation to the first frame.
-     * @returns {void}
-     */
+    * Resets walk animation to the first frame.
+    * @returns {void}
+    */
     resetWalkAnimationStart() {
         this.currentImage = 0;
         this.img = this.imageCache[this.IMAGES_WALK[0]];
     }
 
     /**
-     * Applies keyboard input to movement and jump behavior.
-     * Stops once character is dead.
-     * @returns {void}
-     */
+    * Applies keyboard input to movement and jump behavior.
+    * Stops once character is dead.
+    * @returns {void}
+    */
     inputCheck = () => {
         processCharacterInput(this);
     }
 
     /**
-     * Checks if any relevant control input is currently active.
-     * @returns {boolean}
-     */
+    * Checks if any relevant control input is currently active.
+    * @returns {boolean}
+    */
     hasInput() {
         return !!(
             this.world?.keyboard?.RIGHT ||
@@ -144,66 +144,63 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Computes the maximum x-position the character may move to.
-     * Allows character to move till the end of map
-     * @returns {number}
-     */
+    * Computes the maximum x-position the character may move to.
+    * Allows character to move till the end of map
+    * @returns {number}
+    */
     getMaxCharacterX() {
         if (!this.world || !this.world.canvas || !this.world.level) {
             return Number.POSITIVE_INFINITY;
         }
-
         // level_end_x is the camera limit; convert it to the furthest character x.
         return this.world.level.level_end_x + this.world.canvas.width - this.width;
     }
 
     /**
-     * Stores the current timestamp as the latest movement/input time.
-     * @returns {void}
-     */
+    * Stores the current timestamp as the latest movement/input time.
+    * @returns {void}
+    */
     getLastMove(){
         this.lastMove = Date.now();
     }
 
     /**
-     * Determines whether the character should switch to idle behavior.
-     * @returns {boolean}
-     */
+    * Determines whether the character should switch to idle behavior.
+    * @returns {boolean}
+    */
     fallAsleep(){
         const inactiveForMs = Date.now() - this.lastMove;
         return inactiveForMs >= this.IDLE_DELAY_MS;
     }
 
     /**
-     * Applies incoming damage and triggers hurt/death sound feedback.
-     * Returns false when damage is ignored due to dead/hurt immunity window.
-     * @param {unknown} enemy
-     * @returns {boolean}
-     */
+    * Applies incoming damage and triggers hurt/death sound feedback.
+    * Returns false when damage is ignored due to dead/hurt immunity window.
+    * @param {unknown} enemy
+    * @returns {boolean}
+    */
     hit(enemy) {
         return applyCharacterHit(this, enemy);
     }
 
     /**
-     * Plays the death animation exactly once and keeps the character at a
-     * fixed y-position until the animation is finished.
-     * @returns {void}
-     */
+    * Plays the death animation exactly once and keeps the character at a
+    * fixed y-position until the animation is finished.
+    * @returns {void}
+    */
     playDeadAnimationOnce() {
         playCharacterDeathAnimation(this);
     }
 
     /**
-     * Moves the character down after the death animation has finished.
-     * @returns {void}
-     */
+    * Moves the character down after the death animation has finished.
+    * @returns {void}
+    */
     updateDeathFall() {
         if (!this.deathAnimationDone) return;
-
         this.isFallingAfterDeath = true;
         this.speedY = 0;
         this.y += this.DEATH_FALL_SPEED;
-
         const canvasHeight = this.world?.canvas?.height ?? 480;
         if (this.y >= canvasHeight + this.height) {
             this.hasFallenOutOfScreen = true;
@@ -211,18 +208,18 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Indicates whether the full death sequence has completed.
-     * @returns {boolean}
-     */
+    * Indicates whether the full death sequence has completed.
+    * @returns {boolean}
+    */
     hasCompletedDeathSequence() {
         return this.deathAnimationDone && this.hasFallenOutOfScreen;
     }
 
     /**
-     * Gravity update callback used by the base class interval hub.
-     * Allows character to keep falling after death.
-     * @returns {void}
-     */
+    * Gravity update callback used by the base class interval hub.
+    * Allows character to keep falling after death.
+    * @returns {void}
+    */
     gravityInterval = () => {
         if (this.isAboveGround() || this.speedY > 0) {
             this.y -= this.speedY;
@@ -231,26 +228,26 @@ export class Character extends MovableObject{
     }
 
     /**
-     * Returns total playback duration of the death animation in milliseconds.
-     * @returns {number}
-     */
+    * Returns total playback duration of the death animation in milliseconds.
+    * @returns {number}
+    */
     getDeathAnimationDurationMs() {
         return this.IMAGES_DEAD.length * this.DEAD_ANIMATION_INTERVAL_MS;
     }
 
     /**
-     * Checks whether the temporary post-hit invulnerability is active.
-     * @returns {boolean}
-     */
+    * Checks whether the temporary post-hit invulnerability is active.
+    * @returns {boolean}
+    */
     isHurt(){
         const timePassed = Date.now() - this.lastHit;
         return timePassed < this.DAMAGE_COOLDOWN_MS;
     }
 
     /**
-     * Checks whether character health has reached zero.
-     * @returns {boolean}
-     */
+    * Checks whether character health has reached zero.
+    * @returns {boolean}
+    */
     isDead(){
         return this.energy == 0;
     }

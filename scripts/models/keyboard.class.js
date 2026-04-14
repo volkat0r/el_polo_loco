@@ -1,6 +1,6 @@
 /**
- * Stores current keyboard and touch input states.
- */
+* Stores current keyboard and touch input states.
+*/
 export class Keyboard {
     LEFT = false;
     RIGHT = false;

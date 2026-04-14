@@ -1,21 +1,21 @@
 /**
- * Handles all game sounds and mute state.
- */
+* Handles all game sounds and mute state.
+*/
 export class SoundHub {
     static MUTE_STORAGE_KEY = "epl-muted";
     static isMuted = false;
     static defaultVolume = 0.2;
 
     /**
-     * Stores the desired audible volume per sound.
-     * @type {WeakMap<HTMLAudioElement, number>}
-     */
+    * Stores the desired audible volume per sound.
+    * @type {WeakMap<HTMLAudioElement, number>}
+    */
     static soundVolumes = new WeakMap();
 
     /**
-     * Tracks whether a sound should keep looping when audio is audible.
-     * @type {WeakMap<HTMLAudioElement, boolean>}
-     */
+    * Tracks whether a sound should keep looping when audio is audible.
+    * @type {WeakMap<HTMLAudioElement, boolean>}
+    */
     static loopingSounds = new WeakMap();
 
     static character = {
@@ -69,19 +69,19 @@ export class SoundHub {
     static Sounds = SoundHub.sounds;
 
     /**
-     * Initializes audio settings for all sounds.
-     * @returns {void}
-     */
+    * Initializes audio settings for all sounds.
+    * @returns {void}
+    */
     static init() {
         SoundHub.isMuted = SoundHub.loadMutedState();
         SoundHub.sounds.forEach((sound) => SoundHub.configureSound(sound));
     }
 
     /**
-     * Applies initial settings to one sound.
-     * @param {HTMLAudioElement} sound
-     * @returns {void}
-     */
+    * Applies initial settings to one sound.
+    * @param {HTMLAudioElement} sound
+    * @returns {void}
+    */
     static configureSound(sound) {
         sound.preload = "auto";
         sound.loop = false;
@@ -91,18 +91,16 @@ export class SoundHub {
     }
 
     /**
-     * Plays one sound from the start.
-     * @param {HTMLAudioElement} sound
-     * @param {number} [volume=SoundHub.defaultVolume]
-     * @returns {void}
-     */
+    * Plays one sound from the start.
+    * @param {HTMLAudioElement} sound
+    * @param {number} [volume=SoundHub.defaultVolume]
+    * @returns {void}
+    */
     static playOne(sound, volume = SoundHub.defaultVolume) {
         if (!sound) return;
-
         SoundHub.soundVolumes.set(sound, volume);
         SoundHub.loopingSounds.set(sound, false);
         sound.loop = false;
-
         if (SoundHub.isMuted) return;
         sound.volume = volume;
         sound.currentTime = 0;
@@ -110,21 +108,21 @@ export class SoundHub {
     }
 
     /**
-     * Alias for playOne.
-     * @param {HTMLAudioElement} sound
-     * @param {number} [volume=SoundHub.defaultVolume]
-     * @returns {void}
-     */
+    * Alias for playOne.
+    * @param {HTMLAudioElement} sound
+    * @param {number} [volume=SoundHub.defaultVolume]
+    * @returns {void}
+    */
     static play(sound, volume = SoundHub.defaultVolume) {
         SoundHub.playOne(sound, volume);
     }
 
     /**
-     * Plays a sound in loop mode.
-     * @param {HTMLAudioElement} sound
-     * @param {number} [volume=SoundHub.defaultVolume]
-     * @returns {void}
-     */
+    * Plays a sound in loop mode.
+    * @param {HTMLAudioElement} sound
+    * @param {number} [volume=SoundHub.defaultVolume]
+    * @returns {void}
+    */
     static playLoop(sound, volume = SoundHub.defaultVolume) {
         if (!sound) return;
         SoundHub.prepareLoopSound(sound, volume);
@@ -133,11 +131,11 @@ export class SoundHub {
     }
 
     /**
-     * Marks a sound as looped and attaches loop handler.
-     * @param {HTMLAudioElement} sound
-     * @param {number} volume
-     * @returns {void}
-     */
+    * Marks a sound as looped and attaches loop handler.
+    * @param {HTMLAudioElement} sound
+    * @param {number} volume
+    * @returns {void}
+    */
     static prepareLoopSound(sound, volume) {
         SoundHub.soundVolumes.set(sound, volume);
         SoundHub.loopingSounds.set(sound, true);
@@ -147,20 +145,20 @@ export class SoundHub {
     }
 
     /**
-     * Sets sound volume to muted level.
-     * @param {HTMLAudioElement} sound
-     * @returns {void}
-     */
+    * Sets sound volume to muted level.
+    * @param {HTMLAudioElement} sound
+    * @returns {void}
+    */
     static setMutedVolume(sound) {
         sound.volume = 0;
     }
 
     /**
-     * Resumes loop playback with target volume.
-     * @param {HTMLAudioElement} sound
-     * @param {number} volume
-     * @returns {void}
-     */
+    * Resumes loop playback with target volume.
+    * @param {HTMLAudioElement} sound
+    * @param {number} volume
+    * @returns {void}
+    */
     static resumeLoopSound(sound, volume) {
         sound.volume = volume;
         if (!sound.paused) return;
@@ -168,10 +166,10 @@ export class SoundHub {
     }
 
     /**
-     * Handles ended event for looping sounds.
-     * @param {Event} e
-     * @returns {void}
-     */
+    * Handles ended event for looping sounds.
+    * @param {Event} e
+    * @returns {void}
+    */
     static handleSoundEnded(e) {
         const sound = e.target;
         if (SoundHub.loopingSounds.get(sound)) {
@@ -181,14 +179,13 @@ export class SoundHub {
     }
 
     /**
-     * Stops one sound.
-     * @param {HTMLAudioElement} sound
-     * @param {boolean} [reset=false]
-     * @returns {void}
-     */
+    * Stops one sound.
+    * @param {HTMLAudioElement} sound
+    * @param {boolean} [reset=false]
+    * @returns {void}
+    */
     static stopSingle(sound, reset = false) {
         if (!sound) return;
-
         SoundHub.loopingSounds.set(sound, false);
         sound.loop = false;
         sound.removeEventListener('ended', SoundHub.handleSoundEnded);
@@ -199,9 +196,9 @@ export class SoundHub {
     }
 
     /**
-     * Mutes all sounds.
-     * @returns {void}
-     */
+    * Mutes all sounds.
+    * @returns {void}
+    */
     static muteAll() {
         SoundHub.isMuted = true;
         SoundHub.sounds.forEach((sound) => {
@@ -211,9 +208,9 @@ export class SoundHub {
     }
 
     /**
-     * Unmutes all sounds.
-     * @returns {void}
-     */
+    * Unmutes all sounds.
+    * @returns {void}
+    */
     static unMuteAll() {
         SoundHub.isMuted = false;
         SoundHub.sounds.forEach((sound) => SoundHub.restoreAudibleSound(sound));
@@ -221,10 +218,10 @@ export class SoundHub {
     }
 
     /**
-     * Restores one sound volume and restarts loop if needed.
-     * @param {HTMLAudioElement} sound
-     * @returns {void}
-     */
+    * Restores one sound volume and restarts loop if needed.
+    * @param {HTMLAudioElement} sound
+    * @returns {void}
+    */
     static restoreAudibleSound(sound) {
         const volume = SoundHub.soundVolumes.get(sound) ?? SoundHub.defaultVolume;
         sound.volume = volume;
@@ -233,22 +230,21 @@ export class SoundHub {
     }
 
     /**
-     * Toggles between muted and unmuted.
-     * @returns {void}
-     */
+    * Toggles between muted and unmuted.
+    * @returns {void}
+    */
     static toggleMute() {
         if (SoundHub.isMuted) {
             SoundHub.unMuteAll();
             return;
         }
-
         SoundHub.muteAll();
     }
 
     /**
-     * Stops and resets all sounds.
-     * @returns {void}
-     */
+    * Stops and resets all sounds.
+    * @returns {void}
+    */
     static stopAll() {
         SoundHub.sounds.forEach((sound) => {
             SoundHub.loopingSounds.set(sound, false);
@@ -259,9 +255,9 @@ export class SoundHub {
     }
 
     /**
-     * Loads mute state from local storage.
-     * @returns {boolean}
-     */
+    * Loads mute state from local storage.
+    * @returns {boolean}
+    */
     static loadMutedState() {
         try {
             return window.localStorage.getItem(SoundHub.MUTE_STORAGE_KEY) === "true";
@@ -271,9 +267,9 @@ export class SoundHub {
     }
 
     /**
-     * Saves mute state to local storage.
-     * @returns {void}
-     */
+    * Saves mute state to local storage.
+    * @returns {void}
+    */
     static saveMutedState() {
         try {
             window.localStorage.setItem(SoundHub.MUTE_STORAGE_KEY, String(SoundHub.isMuted));

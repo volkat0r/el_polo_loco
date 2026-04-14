@@ -2,8 +2,8 @@ import { ImageHub } from "../imagehub.class.js";
 import { DrawableObject } from "./drawable-object.class.js";
 
 /**
- * Bottle status bar UI.
- */
+* Bottle status bar UI.
+*/
 export class StatusBarBottles extends DrawableObject{
     percentage = 100;
     imageCache = {};
@@ -12,8 +12,8 @@ export class StatusBarBottles extends DrawableObject{
     IMAGES_STATUS_BOTTLES = ImageHub.status_bar.status_bottle;
 
     /**
-     * Creates bottle status bar.
-     */
+    * Creates bottle status bar.
+    */
     constructor(){
         super();
         this.loadImages(this.IMAGES_STATUS_BOTTLES);
@@ -23,12 +23,12 @@ export class StatusBarBottles extends DrawableObject{
         this.height = 60;
         this.setPercentage(0);
     }
-    
+
     /**
-     * Sets bar value and image.
-     * @param {number} percentage
-     * @returns {void}
-     */
+    * Sets bar value and image.
+    * @param {number} percentage
+    * @returns {void}
+    */
     setPercentage(percentage){
         this.percentage = Math.max(0, Math.min(100, percentage));
         let path = this.IMAGES_STATUS_BOTTLES[this.resolveImageIndex()];
@@ -36,9 +36,9 @@ export class StatusBarBottles extends DrawableObject{
     }
 
     /**
-     * Increases bottle bar by 20.
-     * @returns {void}
-     */
+    * Increases bottle bar by 20.
+    * @returns {void}
+    */
     collectBottle() {
         this.percentage += 20;
         this.percentage = Math.min(100, this.percentage);
@@ -46,9 +46,9 @@ export class StatusBarBottles extends DrawableObject{
     }
 
     /**
-     * Decreases bottle bar by 20.
-     * @returns {void}
-     */
+    * Decreases bottle bar by 20.
+    * @returns {void}
+    */
     throwBottle() {
         this.percentage -= 20;
         this.percentage = Math.max(0, this.percentage);
@@ -56,9 +56,9 @@ export class StatusBarBottles extends DrawableObject{
     }
 
     /**
-     * Resolves image index for current percentage.
-     * @returns {number}
-     */
+    * Resolves image index for current percentage.
+    * @returns {number}
+    */
     resolveImageIndex() {
         if (this.percentage == 100) return 5;
         if (this.percentage >= 80) return 4;

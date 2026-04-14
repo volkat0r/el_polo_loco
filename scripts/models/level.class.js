@@ -1,6 +1,6 @@
 /**
- * Stores all objects used in one level.
- */
+* Stores all objects used in one level.
+*/
 export class Level {
     enemies;
     clouds;
@@ -10,13 +10,13 @@ export class Level {
     level_end_x;
 
     /**
-     * Creates a new level setup.
-     * @param {Array} enemies
-     * @param {Array} clouds
-     * @param {Array} coins
-     * @param {Array} bottles
-     * @param {Array} backgroundObjects
-     */
+    * Creates a new level setup.
+    * @param {Array} enemies
+    * @param {Array} clouds
+    * @param {Array} coins
+    * @param {Array} bottles
+    * @param {Array} backgroundObjects
+    */
     constructor(enemies, clouds, coins, bottles, backgroundObjects){
         this.enemies = enemies;
         this.clouds = clouds;

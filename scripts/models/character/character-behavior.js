@@ -1,10 +1,10 @@
 import { SoundHub } from "../../soundhub.class.js";
 
 /**
- * Selects and plays the current character animation.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Selects and plays the current character animation.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 export function selectCharacterAnimation(character) {
     const inLongIdle = character.fallAsleep();
     const isInAir = character.isAboveGround() || character.speedY > 0;
@@ -17,10 +17,10 @@ export function selectCharacterAnimation(character) {
 }
 
 /**
- * Processes character input for movement and jumping.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Processes character input for movement and jumping.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 export function processCharacterInput(character) {
     if (character.isDead()) return;
     if (character.hasInput()) character.getLastMove();
@@ -29,10 +29,10 @@ export function processCharacterInput(character) {
 }
 
 /**
- * Applies damage to the character and returns whether the hit was accepted.
- * @param {import("../character.class.js").Character} character
- * @returns {boolean}
- */
+* Applies damage to the character and returns whether the hit was accepted.
+* @param {import("../character.class.js").Character} character
+* @returns {boolean}
+*/
 export function applyCharacterHit(character) {
     if (!canTakeDamage(character)) return false;
     applyStandardDamage(character);
@@ -42,10 +42,10 @@ export function applyCharacterHit(character) {
 }
 
 /**
- * Plays the character death animation sequence.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Plays the character death animation sequence.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 export function playCharacterDeathAnimation(character) {
     startDeathSequenceIfNeeded(character);
     lockDeathYPosition(character);
@@ -54,10 +54,10 @@ export function playCharacterDeathAnimation(character) {
 }
 
 /**
- * Handles death animation state.
- * @param {import("../character.class.js").Character} character
- * @returns {boolean}
- */
+* Handles death animation state.
+* @param {import("../character.class.js").Character} character
+* @returns {boolean}
+*/
 function handleDeadAnimationState(character) {
     if (!character.isDead()) return false;
     SoundHub.stopSingle(character.SOUND_WALK);
@@ -68,11 +68,11 @@ function handleDeadAnimationState(character) {
 }
 
 /**
- * Resets walk animation when landing from a jump.
- * @param {import("../character.class.js").Character} character
- * @param {boolean} isInAir
- * @returns {boolean}
- */
+* Resets walk animation when landing from a jump.
+* @param {import("../character.class.js").Character} character
+* @param {boolean} isInAir
+* @returns {boolean}
+*/
 function handleLandingFromJump(character, isInAir) {
     if (!character.wasJumping || isInAir) return false;
     character.wasJumping = false;
@@ -82,11 +82,11 @@ function handleLandingFromJump(character, isInAir) {
 }
 
 /**
- * Handles jump animation state while character is in the air.
- * @param {import("../character.class.js").Character} character
- * @param {boolean} isInAir
- * @returns {boolean}
- */
+* Handles jump animation state while character is in the air.
+* @param {import("../character.class.js").Character} character
+* @param {boolean} isInAir
+* @returns {boolean}
+*/
 function handleAirAnimationState(character, isInAir) {
     if (!isInAir) return false;
     character.wasJumping = true;
@@ -97,10 +97,10 @@ function handleAirAnimationState(character, isInAir) {
 }
 
 /**
- * Plays the next jump frame when the timer elapsed.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Plays the next jump frame when the timer elapsed.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function playJumpFrameIfDue(character) {
     const now = Date.now();
     if (now - character.lastJumpFrameAt < character.JUMP_FRAME_INTERVAL_MS) return;
@@ -109,10 +109,10 @@ function playJumpFrameIfDue(character) {
 }
 
 /**
- * Handles hurt animation state.
- * @param {import("../character.class.js").Character} character
- * @returns {boolean}
- */
+* Handles hurt animation state.
+* @param {import("../character.class.js").Character} character
+* @returns {boolean}
+*/
 function handleHurtAnimationState(character) {
     if (!character.isHurt()) return false;
     SoundHub.stopSingle(character.SOUND_WALK);
@@ -122,10 +122,10 @@ function handleHurtAnimationState(character) {
 }
 
 /**
- * Handles walk animation state.
- * @param {import("../character.class.js").Character} character
- * @returns {boolean}
- */
+* Handles walk animation state.
+* @param {import("../character.class.js").Character} character
+* @returns {boolean}
+*/
 function handleWalkAnimationState(character) {
     if (!character.world.keyboard.RIGHT && !character.world.keyboard.LEFT) return false;
     if (character.wasJumping) resetWalkAfterJump(character);
@@ -136,21 +136,21 @@ function handleWalkAnimationState(character) {
 }
 
 /**
- * Resets walk state after jumping.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Resets walk state after jumping.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function resetWalkAfterJump(character) {
     character.resetWalkAnimationStart();
     character.wasJumping = false;
 }
 
 /**
- * Handles idle and long-idle animation state.
- * @param {import("../character.class.js").Character} character
- * @param {boolean} inLongIdle
- * @returns {void}
- */
+* Handles idle and long-idle animation state.
+* @param {import("../character.class.js").Character} character
+* @param {boolean} inLongIdle
+* @returns {void}
+*/
 function handleIdleAnimationState(character, inLongIdle) {
     SoundHub.stopSingle(character.SOUND_WALK);
     updateLongIdleSnoreState(character, inLongIdle);
@@ -158,11 +158,11 @@ function handleIdleAnimationState(character, inLongIdle) {
 }
 
 /**
- * Starts or stops the long-idle snore loop.
- * @param {import("../character.class.js").Character} character
- * @param {boolean} inLongIdle
- * @returns {void}
- */
+* Starts or stops the long-idle snore loop.
+* @param {import("../character.class.js").Character} character
+* @param {boolean} inLongIdle
+* @returns {void}
+*/
 function updateLongIdleSnoreState(character, inLongIdle) {
     if (inLongIdle && !character.isInLongIdle) {
         SoundHub.playLoop(character.SOUND_IDLE, 0.1);
@@ -173,11 +173,11 @@ function updateLongIdleSnoreState(character, inLongIdle) {
 }
 
 /**
- * Plays the next idle frame when the timer elapsed.
- * @param {import("../character.class.js").Character} character
- * @param {boolean} inLongIdle
- * @returns {void}
- */
+* Plays the next idle frame when the timer elapsed.
+* @param {import("../character.class.js").Character} character
+* @param {boolean} inLongIdle
+* @returns {void}
+*/
 function playIdleFrameIfDue(character, inLongIdle) {
     const now = Date.now();
     if (now - character.lastIdleFrameAt < character.IDLE_FRAME_INTERVAL_MS) return;
@@ -187,10 +187,10 @@ function playIdleFrameIfDue(character, inLongIdle) {
 }
 
 /**
- * Handles horizontal movement input.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Handles horizontal movement input.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function handleHorizontalInput(character) {
     if (character.world.keyboard.RIGHT && character.x < character.getMaxCharacterX()) {
         character.moveRight();
@@ -204,10 +204,10 @@ function handleHorizontalInput(character) {
 }
 
 /**
- * Handles jump input.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Handles jump input.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function handleJumpInput(character) {
     if (!character.world.keyboard.UP || character.isAboveGround()) return;
     SoundHub.playOne(character.SOUND_JUMP);
@@ -215,30 +215,30 @@ function handleJumpInput(character) {
 }
 
 /**
- * Returns whether the character can currently take damage.
- * @param {import("../character.class.js").Character} character
- * @returns {boolean}
- */
+* Returns whether the character can currently take damage.
+* @param {import("../character.class.js").Character} character
+* @returns {boolean}
+*/
 function canTakeDamage(character) {
     if (character.isDead()) return false;
     return !character.isHurt();
 }
 
 /**
- * Applies one standard damage step and clamps the minimum energy.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Applies one standard damage step and clamps the minimum energy.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function applyStandardDamage(character) {
     character.energy -= 20;
     if (character.energy < 0) character.energy = 0;
 }
 
 /**
- * Plays hurt or death feedback sound.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Plays hurt or death feedback sound.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function playDamageFeedbackSound(character) {
     if (character.energy === 0) {
         SoundHub.playOne(character.SOUND_DEAD);
@@ -249,10 +249,10 @@ function playDamageFeedbackSound(character) {
 }
 
 /**
- * Initializes values at the start of the death sequence.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Initializes values at the start of the death sequence.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function startDeathSequenceIfNeeded(character) {
     if (character.isDying) return;
     character.isDying = true;
@@ -265,20 +265,20 @@ function startDeathSequenceIfNeeded(character) {
 }
 
 /**
- * Keeps the character at a fixed y-position while dying.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Keeps the character at a fixed y-position while dying.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function lockDeathYPosition(character) {
     if (character.deathAnimationDone || character.deathStartY === null) return;
     character.y = character.deathStartY;
 }
 
 /**
- * Draws the current death frame image.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Draws the current death frame image.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function renderDeathFrame(character) {
     const lastFrameIndex = character.IMAGES_DEAD.length - 1;
     const frameIndex = Math.min(character.deathAnimationFrame, lastFrameIndex);
@@ -287,10 +287,10 @@ function renderDeathFrame(character) {
 }
 
 /**
- * Advances the death animation frame counter.
- * @param {import("../character.class.js").Character} character
- * @returns {void}
- */
+* Advances the death animation frame counter.
+* @param {import("../character.class.js").Character} character
+* @returns {void}
+*/
 function advanceDeathFrame(character) {
     const lastFrameIndex = character.IMAGES_DEAD.length - 1;
     if (character.deathAnimationFrame >= lastFrameIndex) {

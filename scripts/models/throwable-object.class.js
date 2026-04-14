@@ -3,8 +3,8 @@ import { ImageHub } from "../imagehub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
 /**
- * Throwable bottle object.
- */
+* Throwable bottle object.
+*/
 export class ThrowableObject extends MovableObject {
     // Image Hub
     BOTTLE_ON_GROUND = ImageHub.salsa_bottle.bottle_on_ground;
@@ -15,11 +15,11 @@ export class ThrowableObject extends MovableObject {
     GROUND_Y = 330;
 
     /**
-     * Creates a thrown bottle instance.
-     * @param {number} x
-     * @param {number} y
-     * @param {boolean} [throwToLeft=false]
-     */
+    * Creates a thrown bottle instance.
+    * @param {number} x
+    * @param {number} y
+    * @param {boolean} [throwToLeft=false]
+    */
     constructor(x, y, throwToLeft = false){
         super();
         this.loadImage(this.BOTTEL_ROTATION[0]);
@@ -33,7 +33,6 @@ export class ThrowableObject extends MovableObject {
         this.otherDirection = throwToLeft;
         this.throw();
         this.animate();
-
         this.offset = {
             left: 20,
             right: 20,
@@ -43,33 +42,33 @@ export class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Starts throw movement and rotation/splash animation loops.
-     * @returns {void}
-     */
+    * Starts throw movement and rotation/splash animation loops.
+    * @returns {void}
+    */
     animate(){
         IntervalHub.startInterval(this.throwBottle, 1000 / 25);
         IntervalHub.startInterval(() => {
             if (this.isSplashing) {
-                this.playAnimation(this.BOTTLE_SPLASH);}
-            else {
+                this.playAnimation(this.BOTTLE_SPLASH);
+            } else {
                 this.playAnimation(this.BOTTEL_ROTATION);
             }
         }, 1000 / 12);
     }
 
     /**
-     * Applies jump-like throw force.
-     * @returns {void}
-     */
+    * Applies jump-like throw force.
+    * @returns {void}
+    */
     throw(){
         this.speedY = 30;
         this.applyGravity();
     }
 
     /**
-     * Updates horizontal movement and checks ground hit.
-     * @returns {void}
-     */
+    * Updates horizontal movement and checks ground hit.
+    * @returns {void}
+    */
     throwBottle = () => {
         if (this.isSplashing) return;
         this.x += 10 * this.throwDirection;
@@ -79,9 +78,9 @@ export class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Switches bottle into splash state and removes it later.
-     * @returns {void}
-     */
+    * Switches bottle into splash state and removes it later.
+    * @returns {void}
+    */
     splash() {
         if (this.isSplashing) return;
         this.isSplashing = true;
@@ -92,9 +91,9 @@ export class ThrowableObject extends MovableObject {
     }
 
     /**
-     * Returns true while bottle is still flying.
-     * @returns {boolean}
-     */
+    * Returns true while bottle is still flying.
+    * @returns {boolean}
+    */
     isAboveGround(){
         return !this.isSplashing;
     }

@@ -2,8 +2,8 @@ import { ImageHub } from "../imagehub.class.js";
 import { DrawableObject } from "./drawable-object.class.js";
 
 /**
- * Endboss health bar UI.
- */
+* Endboss health bar UI.
+*/
 export class StatusBarEndboss extends DrawableObject {
     percentage = 100;
     endboss;
@@ -11,13 +11,12 @@ export class StatusBarEndboss extends DrawableObject {
     IMAGES_STATUS_ENDBOSS = ImageHub.status_bar.status_endboss;
 
     /**
-     * Creates endboss status bar.
-     * @param {import("./endboss.class.js").Endboss} endboss
-     */
+    * Creates endboss status bar.
+    * @param {import("./endboss.class.js").Endboss} endboss
+    */
     constructor(endboss) {
         super();
         this.endboss = endboss;
-
         this.loadImages(this.IMAGES_STATUS_ENDBOSS);
         this.width = 200;
         this.height = 60;
@@ -25,28 +24,28 @@ export class StatusBarEndboss extends DrawableObject {
     }
 
     /**
-     * Updates bar position and value.
-     * @returns {void}
-     */
+    * Updates bar position and value.
+    * @returns {void}
+    */
     update() {
         this.updatePosition();
         this.setPercentage(this.endboss.energy);
     }
 
     /**
-     * Moves bar above the endboss.
-     * @returns {void}
-     */
+    * Moves bar above the endboss.
+    * @returns {void}
+    */
     updatePosition() {
         this.x = this.endboss.x + 40;
         this.y = this.endboss.y - 40;
     }
 
     /**
-     * Sets bar value and image.
-     * @param {number} percentage
-     * @returns {void}
-     */
+    * Sets bar value and image.
+    * @param {number} percentage
+    * @returns {void}
+    */
     setPercentage(percentage) {
         this.percentage = Math.max(0, Math.min(100, percentage));
         const path = this.IMAGES_STATUS_ENDBOSS[this.resolveImageIndex()];
@@ -54,9 +53,9 @@ export class StatusBarEndboss extends DrawableObject {
     }
 
     /**
-     * Resolves image index for current percentage.
-     * @returns {number}
-     */
+    * Resolves image index for current percentage.
+    * @returns {number}
+    */
     resolveImageIndex() {
         if (this.percentage === 100) return 5;
         if (this.percentage >= 80) return 4;

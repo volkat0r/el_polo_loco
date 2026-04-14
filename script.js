@@ -13,9 +13,9 @@ window.addEventListener("DOMContentLoaded", init);
 window.endGame = endGame;
 
 /**
- * Initializes the game UI, audio, and input handling.
- * @returns {void}
- */
+* Initializes the game UI, audio, and input handling.
+* @returns {void}
+*/
 function init() {
     gameUi = createGameUi({ onHomeRequested: returnToStart, onStartRequested: startGame });
     SoundHub.init();
@@ -26,9 +26,9 @@ function init() {
 }
 
 /**
- * Starts a new game session.
- * @returns {void}
- */
+* Starts a new game session.
+* @returns {void}
+*/
 function startGame() {
     gameUi.requestFullscreenOnMobile();
     stopGame();
@@ -41,9 +41,9 @@ function startGame() {
 }
 
 /**
- * Stops the current game and clears running loops.
- * @returns {void}
- */
+* Stops the current game and clears running loops.
+* @returns {void}
+*/
 function stopGame() {
     IntervalHub.clearAll();
     SoundHub.stopAll();
@@ -53,10 +53,10 @@ function stopGame() {
 }
 
 /**
- * Ends the game and shows the requested result screen.
- * @param {"win"|"lose"|"start"|"playing"} status
- * @returns {void}
- */
+* Ends the game and shows the requested result screen.
+* @param {"win"|"lose"|"start"|"playing"} status
+* @returns {void}
+*/
 function endGame(status) {
     stopGame();
     playResultSound(status);
@@ -64,9 +64,9 @@ function endGame(status) {
 }
 
 /**
- * Returns from a result screen to the start screen.
- * @returns {void}
- */
+* Returns from a result screen to the start screen.
+* @returns {void}
+*/
 function returnToStart() {
     stopGame();
     resetKeyboardState(keyboard);
@@ -74,10 +74,10 @@ function returnToStart() {
 }
 
 /**
- * Plays audio feedback for a win or lose result.
- * @param {"win"|"lose"|"start"|"playing"} status
- * @returns {void}
- */
+* Plays audio feedback for a win or lose result.
+* @param {"win"|"lose"|"start"|"playing"} status
+* @returns {void}
+*/
 function playResultSound(status) {
     if (status === "win") SoundHub.playOne(SoundHub.gameResult.win, 0.2);
     if (status === "lose") SoundHub.playOne(SoundHub.gameResult.lose, 0.2);

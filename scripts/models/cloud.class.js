@@ -3,8 +3,8 @@ import { ImageHub } from "../imagehub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
 /**
- * Moving cloud background object.
- */
+* Moving cloud background object.
+*/
 export class Cloud extends MovableObject{
     x = 50;
     y = 0;
@@ -15,8 +15,8 @@ export class Cloud extends MovableObject{
     CLOUD = ImageHub.background.clouds;
 
     /**
-     * Creates one cloud with random x position.
-     */
+    * Creates one cloud with random x position.
+    */
     constructor(){
         super();
         this.loadImage(this.CLOUD[0], this.CLOUD[1]);
@@ -25,9 +25,9 @@ export class Cloud extends MovableObject{
     }
 
     /**
-     * Starts cloud movement loop.
-     * @returns {void}
-     */
+    * Starts cloud movement loop.
+    * @returns {void}
+    */
     animate(){
         IntervalHub.startInterval(this.moveLeft, 1000 / 60);
     }

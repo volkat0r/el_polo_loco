@@ -1,6 +1,6 @@
 /**
- * Base drawable object with image cache and debug frames.
- */
+* Base drawable object with image cache and debug frames.
+*/
 export class DrawableObject{
     img;
     imageCache = {};
@@ -12,10 +12,10 @@ export class DrawableObject{
     height = 150;
 
     /**
-     * Loads a single image into img.
-     * @param {string} path
-     * @returns {void}
-     */
+    * Loads a single image into img.
+    * @param {string} path
+    * @returns {void}
+    */
     loadImage(path){
         const img = new Image();
         img.onload = () => {
@@ -26,10 +26,10 @@ export class DrawableObject{
     }
 
     /**
-     * Loads multiple images into cache.
-     * @param {string[]} imageArray
-     * @returns {void}
-     */
+    * Loads multiple images into cache.
+    * @param {string[]} imageArray
+    * @returns {void}
+    */
     loadImages(imageArray) {
         imageArray.forEach((path) => {
             const img = new Image();
@@ -44,32 +44,31 @@ export class DrawableObject{
     }
 
     /**
-     * Checks whether an image finished loading and can be drawn.
-     * @param {HTMLImageElement | undefined} img
-     * @returns {boolean}
-     */
+    * Checks whether an image finished loading and can be drawn.
+    * @param {HTMLImageElement | undefined} img
+    * @returns {boolean}
+    */
     isRenderableImage(img) {
         return !!img && img.complete && img.naturalWidth > 0;
     }
 
     /**
-     * Draws object image on canvas.
-     * @param {CanvasRenderingContext2D} ctx
-     * @returns {void}
-     */
+    * Draws object image on canvas.
+    * @param {CanvasRenderingContext2D} ctx
+    * @returns {void}
+    */
     draw(ctx){
         const renderImg = this.isRenderableImage(this.img) ? this.img : this.lastRenderableImg;
         if (!this.isRenderableImage(renderImg)) return;
-
         this.lastRenderableImg = renderImg;
         ctx.drawImage(renderImg, this.x, this.y, this.width, this.height);
     }
 
     /**
-     * Draws blue debug frame.
-     * @param {CanvasRenderingContext2D} ctx
-     * @returns {void}
-     */
+    * Draws blue debug frame.
+    * @param {CanvasRenderingContext2D} ctx
+    * @returns {void}
+    */
     drawFrame(ctx) {
         if (!this.showFrame) return;
         ctx.beginPath();
@@ -80,10 +79,10 @@ export class DrawableObject{
     }
 
     /**
-     * Draws red offset debug frame.
-     * @param {CanvasRenderingContext2D} ctx
-     * @returns {void}
-     */
+    * Draws red offset debug frame.
+    * @param {CanvasRenderingContext2D} ctx
+    * @returns {void}
+    */
     drawOffsetFrame(ctx) {
         if (!this.showOffsetFrame) return;
         ctx.beginPath();

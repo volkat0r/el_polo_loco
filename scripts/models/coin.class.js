@@ -3,8 +3,8 @@ import { ImageHub } from "../imagehub.class.js";
 import { MovableObject } from "./movable-object.class.js";
 
 /**
- * Collectable coin object.
- */
+* Collectable coin object.
+*/
 export class Coins extends MovableObject {
     height = 100;
     width = 100;
@@ -13,11 +13,10 @@ export class Coins extends MovableObject {
     IMAGES_COIN = ImageHub.coin.coin;
 
     /**
-     * Creates one coin with random position.
-     */
+    * Creates one coin with random position.
+    */
     constructor(){
         super();
-
         this.showFrame = false;
         this.showOffsetFrame = false;
         this.loadImage(this.IMAGES_COIN[0]);
@@ -30,17 +29,17 @@ export class Coins extends MovableObject {
     }
 
     /**
-     * Starts coin animation loop.
-     * @returns {void}
-     */
+    * Starts coin animation loop.
+    * @returns {void}
+    */
     animate() {
         IntervalHub.startInterval(this.animateCoin, 300);
     }
 
     /**
-     * Switches to next coin image frame.
-     * @returns {void}
-     */
+    * Switches to next coin image frame.
+    * @returns {void}
+    */
     animateCoin = () => {
         let i = this.currentImage % this.IMAGES_COIN.length;
         let path = this.IMAGES_COIN[i];

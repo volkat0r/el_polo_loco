@@ -12,9 +12,9 @@ const AIR_PATH = "./assets/img/5_background/layers/air.png";
 const BACKGROUND_SEGMENTS = [-719, 0, 719, 719 * 2, 719 * 3];
 
 /**
- * Creates and returns level 1 setup.
- * @returns {Level}
- */
+* Creates and returns level 1 setup.
+* @returns {Level}
+*/
 export function createLevel1() {
     return new Level(
         createEnemies(),
@@ -26,9 +26,9 @@ export function createLevel1() {
 }
 
 /**
- * Creates all enemies for level 1.
- * @returns {(Chicken|ChickenSmall)[]}
- */
+* Creates all enemies for level 1.
+* @returns {(Chicken|ChickenSmall)[]}
+*/
 function createEnemies() {
     return [
         ...createRepeated(() => new ChickenSmall(), 3),
@@ -37,33 +37,33 @@ function createEnemies() {
 }
 
 /**
- * Creates all cloud objects for level 1.
- * @returns {Cloud[]}
- */
+* Creates all cloud objects for level 1.
+* @returns {Cloud[]}
+*/
 function createClouds() {
     return createRepeated(() => new Cloud(), 6);
 }
 
 /**
- * Creates all coin objects for level 1.
- * @returns {Coins[]}
- */
+* Creates all coin objects for level 1.
+* @returns {Coins[]}
+*/
 function createCoins() {
     return createRepeated(() => new Coins(), 10);
 }
 
 /**
- * Creates all bottle objects for level 1.
- * @returns {Bottles[]}
- */
+* Creates all bottle objects for level 1.
+* @returns {Bottles[]}
+*/
 function createBottles() {
     return createRepeated(() => new Bottles(), 10);
 }
 
 /**
- * Creates all background objects for level 1.
- * @returns {BackgroundObject[]}
- */
+* Creates all background objects for level 1.
+* @returns {BackgroundObject[]}
+*/
 function createBackgroundObjects() {
     const backgrounds = [];
     BACKGROUND_SEGMENTS.forEach((x, index) => {
@@ -73,12 +73,12 @@ function createBackgroundObjects() {
 }
 
 /**
- * Adds one full parallax segment at a given x-position.
- * @param {BackgroundObject[]} backgrounds
- * @param {number} x
- * @param {boolean} useSecondVariant
- * @returns {void}
- */
+* Adds one full parallax segment at a given x-position.
+* @param {BackgroundObject[]} backgrounds
+* @param {number} x
+* @param {boolean} useSecondVariant
+* @returns {void}
+*/
 function addBackgroundSegment(backgrounds, x, useSecondVariant) {
     const variant = useSecondVariant ? "2" : "1";
     backgrounds.push(new BackgroundObject(AIR_PATH, x));
@@ -88,12 +88,12 @@ function addBackgroundSegment(backgrounds, x, useSecondVariant) {
 }
 
 /**
- * Creates an array by repeatedly calling a factory function.
- * @template T
- * @param {() => T} factory
- * @param {number} count
- * @returns {T[]}
- */
+* Creates an array by repeatedly calling a factory function.
+* @template T
+* @param {() => T} factory
+* @param {number} count
+* @returns {T[]}
+*/
 function createRepeated(factory, count) {
     return Array.from({ length: count }, () => factory());
 }

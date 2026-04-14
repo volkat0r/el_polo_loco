@@ -193,7 +193,7 @@ footer {
     right: 16px;
     display: flex;
     z-index: 100;
-    ul{ 
+    ul{
         display: flex;
         gap: 8px;
     }
@@ -452,6 +452,19 @@ body:has(#imprint-content) main {
         right: 0;
         bottom: max(6px, env(safe-area-inset-bottom));
         z-index: 120;
+    }
+    footer {
+        position: fixed;
+        bottom: max(4px, env(safe-area-inset-bottom));
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 110;
+        padding-bottom: 0;
+    }
+    footer .imprint-link {
+        font-size: 1rem;
+        opacity: 0.5;
+        color: white;
     }
 }
 

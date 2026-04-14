@@ -11,10 +11,10 @@ const SCREEN_RESULT_IMAGES = {
 };
 
 /**
- * Creates a UI controller for overlay, sound buttons, modal, and fullscreen.
- * @param {{onStartRequested: () => void, onHomeRequested: () => void}} handlers
- * @returns {{canvas: HTMLCanvasElement, closeInstructionsModal: () => void, hideOverlay: () => void, requestFullscreenOnMobile: () => void, setScreen: (status: "win"|"lose"|"start"|"playing") => void, updateSoundButtonsState: () => void}}
- */
+* Creates a UI controller for overlay, sound buttons, modal, and fullscreen.
+* @param {{onStartRequested: () => void, onHomeRequested: () => void}} handlers
+* @returns {{canvas: HTMLCanvasElement, closeInstructionsModal: () => void, hideOverlay: () => void, requestFullscreenOnMobile: () => void, setScreen: (status: "win"|"lose"|"start"|"playing") => void, updateSoundButtonsState: () => void}}
+*/
 export function createGameUi(handlers) {
     const refs = cacheDomElements();
     bindUiEvents(refs, handlers);
@@ -29,9 +29,9 @@ export function createGameUi(handlers) {
 }
 
 /**
- * Caches all DOM elements used by the game UI.
- * @returns {{canvas: HTMLCanvasElement, fullscreenButton: HTMLElement | null, instructionsCloseButton: HTMLElement | null, instructionsModal: HTMLElement | null, instructionsOpenButton: HTMLElement | null, muteButton: HTMLElement | null, screenBtn: HTMLButtonElement, screenHomeBtn: HTMLButtonElement | null, screenOverlay: HTMLElement, screenResultImage: HTMLImageElement | null, screenText: HTMLElement, screenTitle: HTMLElement, unmuteButton: HTMLElement | null}}
- */
+* Caches all DOM elements used by the game UI.
+* @returns {{canvas: HTMLCanvasElement, fullscreenButton: HTMLElement | null, instructionsCloseButton: HTMLElement | null, instructionsModal: HTMLElement | null, instructionsOpenButton: HTMLElement | null, muteButton: HTMLElement | null, screenBtn: HTMLButtonElement, screenHomeBtn: HTMLButtonElement | null, screenOverlay: HTMLElement, screenResultImage: HTMLImageElement | null, screenText: HTMLElement, screenTitle: HTMLElement, unmuteButton: HTMLElement | null}}
+*/
 function cacheDomElements() {
     return {
         canvas: document.getElementById("canvas"),
@@ -51,11 +51,11 @@ function cacheDomElements() {
 }
 
 /**
- * Registers all UI event listeners.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {{onStartRequested: () => void, onHomeRequested: () => void}} handlers
- * @returns {void}
- */
+* Registers all UI event listeners.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {{onStartRequested: () => void, onHomeRequested: () => void}} handlers
+* @returns {void}
+*/
 function bindUiEvents(refs, handlers) {
     refs.screenBtn.addEventListener("click", () => handleScreenButtonClick(refs, handlers.onStartRequested));
     refs.screenHomeBtn?.addEventListener("click", handlers.onHomeRequested);
@@ -68,42 +68,42 @@ function bindUiEvents(refs, handlers) {
 }
 
 /**
- * Starts the game when the overlay action button is pressed.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {() => void} onStartRequested
- * @returns {void}
- */
+* Starts the game when the overlay action button is pressed.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {() => void} onStartRequested
+* @returns {void}
+*/
 function handleScreenButtonClick(refs, onStartRequested) {
     const action = refs.screenBtn.dataset.action;
     if (action === "start" || action === "restart") onStartRequested();
 }
 
 /**
- * Handles mute button click.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @returns {void}
- */
+* Handles mute button click.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @returns {void}
+*/
 function handleMuteClick(refs) {
     SoundHub.muteAll();
     updateSoundButtonsState(refs);
 }
 
 /**
- * Handles unmute button click.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @returns {void}
- */
+* Handles unmute button click.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @returns {void}
+*/
 function handleUnmuteClick(refs) {
     SoundHub.unMuteAll();
     updateSoundButtonsState(refs);
 }
 
 /**
- * Closes instructions when the backdrop is clicked.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {MouseEvent} event
- * @returns {void}
- */
+* Closes instructions when the backdrop is clicked.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {MouseEvent} event
+* @returns {void}
+*/
 function handleInstructionsBackdropClick(refs, event) {
     const target = event.target;
     if (!(target instanceof HTMLElement)) return;
@@ -111,9 +111,9 @@ function handleInstructionsBackdropClick(refs, event) {
 }
 
 /**
- * Toggles browser fullscreen mode.
- * @returns {void}
- */
+* Toggles browser fullscreen mode.
+* @returns {void}
+*/
 function toggleFullscreen() {
     if (!document.fullscreenElement) {
         requestFullscreen(document.documentElement);
@@ -124,9 +124,9 @@ function toggleFullscreen() {
 }
 
 /**
- * Requests fullscreen automatically on touch devices.
- * @returns {void}
- */
+* Requests fullscreen automatically on touch devices.
+* @returns {void}
+*/
 function requestFullscreenOnMobile() {
     if (!isTouchDevice()) return;
     if (document.fullscreenElement) return;
@@ -134,10 +134,10 @@ function requestFullscreenOnMobile() {
 }
 
 /**
- * Requests fullscreen for a given element.
- * @param {HTMLElement} target
- * @returns {void}
- */
+* Requests fullscreen for a given element.
+* @param {HTMLElement} target
+* @returns {void}
+*/
 function requestFullscreen(target) {
     const request =
         target.requestFullscreen ||
@@ -147,9 +147,9 @@ function requestFullscreen(target) {
 }
 
 /**
- * Exits fullscreen mode.
- * @returns {void}
- */
+* Exits fullscreen mode.
+* @returns {void}
+*/
 function exitFullscreen() {
     const exit =
         document.exitFullscreen ||
@@ -159,18 +159,18 @@ function exitFullscreen() {
 }
 
 /**
- * Returns whether the current device uses touch input.
- * @returns {boolean}
- */
+* Returns whether the current device uses touch input.
+* @returns {boolean}
+*/
 function isTouchDevice() {
     return window.matchMedia("(hover: none) and (pointer: coarse)").matches;
 }
 
 /**
- * Updates mute and unmute button visibility.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @returns {void}
- */
+* Updates mute and unmute button visibility.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @returns {void}
+*/
 function updateSoundButtonsState(refs) {
     const muted = SoundHub.isMuted;
     refs.muteButton?.classList.toggle("is-hidden", muted);
@@ -178,11 +178,11 @@ function updateSoundButtonsState(refs) {
 }
 
 /**
- * Sets the current overlay screen.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {"win"|"lose"|"start"|"playing"} status
- * @returns {void}
- */
+* Sets the current overlay screen.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {"win"|"lose"|"start"|"playing"} status
+* @returns {void}
+*/
 function setScreen(refs, status) {
     if (status === "playing") {
         setHomeButtonVisible(refs, false);
@@ -197,10 +197,10 @@ function setScreen(refs, status) {
 }
 
 /**
- * Returns overlay content for a given status.
- * @param {"win"|"lose"|"start"|"playing"} status
- * @returns {{action: string, buttonLabel: string, showHomeButton: boolean, text: string, title: string}|null}
- */
+* Returns overlay content for a given status.
+* @param {"win"|"lose"|"start"|"playing"} status
+* @returns {{action: string, buttonLabel: string, showHomeButton: boolean, text: string, title: string}|null}
+*/
 function getScreenConfig(status) {
     if (status === "start") {
         return makeScreenConfig(false, "El Pollo Loco", "Ready? Start the game!", "Start", "start");
@@ -218,37 +218,37 @@ function getScreenConfig(status) {
 }
 
 /**
- * Creates one overlay config object.
- * @param {boolean} showHomeButton
- * @param {string} title
- * @param {string} text
- * @param {string} buttonLabel
- * @param {string} action
- * @returns {{action: string, buttonLabel: string, showHomeButton: boolean, text: string, title: string}}
- */
+* Creates one overlay config object.
+* @param {boolean} showHomeButton
+* @param {string} title
+* @param {string} text
+* @param {string} buttonLabel
+* @param {string} action
+* @returns {{action: string, buttonLabel: string, showHomeButton: boolean, text: string, title: string}}
+*/
 function makeScreenConfig(showHomeButton, title, text, buttonLabel, action) {
     return { action, buttonLabel, showHomeButton, text, title };
 }
 
 /**
- * Shows or hides the home button.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {boolean} visible
- * @returns {void}
- */
+* Shows or hides the home button.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {boolean} visible
+* @returns {void}
+*/
 function setHomeButtonVisible(refs, visible) {
     refs.screenHomeBtn?.classList.toggle("hidden", !visible);
 }
 
 /**
- * Renders overlay title, text, and action button.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {string} title
- * @param {string} text
- * @param {string} buttonLabel
- * @param {string} action
- * @returns {void}
- */
+* Renders overlay title, text, and action button.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {string} title
+* @param {string} text
+* @param {string} buttonLabel
+* @param {string} action
+* @returns {void}
+*/
 function showOverlay(refs, title, text, buttonLabel, action) {
     setOverlayResultImage(refs, action);
     refs.screenTitle.textContent = title;
@@ -259,11 +259,11 @@ function showOverlay(refs, title, text, buttonLabel, action) {
 }
 
 /**
- * Updates the result image for the current overlay state.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {string} status
- * @returns {void}
- */
+* Updates the result image for the current overlay state.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {string} status
+* @returns {void}
+*/
 function setOverlayResultImage(refs, status) {
     if (!refs.screenResultImage) return;
     const imageSrc = SCREEN_RESULT_IMAGES[status];
@@ -282,12 +282,12 @@ function setOverlayResultImage(refs, status) {
 }
 
 /**
- * Updates the overlay action button image.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @param {string} action
- * @param {string} fallbackAlt
- * @returns {void}
- */
+* Updates the overlay action button image.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @param {string} action
+* @param {string} fallbackAlt
+* @returns {void}
+*/
 function setOverlayButtonImage(refs, action, fallbackAlt) {
     const imageSrc = SCREEN_BUTTON_IMAGES[action] || SCREEN_BUTTON_IMAGES.start;
     const altText = fallbackAlt || "Start";
@@ -296,28 +296,28 @@ function setOverlayButtonImage(refs, action, fallbackAlt) {
 }
 
 /**
- * Hides the overlay.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @returns {void}
- */
+* Hides the overlay.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @returns {void}
+*/
 function hideOverlay(refs) {
     refs.screenOverlay.classList.add("hidden");
 }
 
 /**
- * Opens the instructions modal.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @returns {void}
- */
+* Opens the instructions modal.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @returns {void}
+*/
 function openInstructionsModal(refs) {
     refs.instructionsModal?.classList.remove("hidden");
 }
 
 /**
- * Closes the instructions modal.
- * @param {ReturnType<typeof cacheDomElements>} refs
- * @returns {void}
- */
+* Closes the instructions modal.
+* @param {ReturnType<typeof cacheDomElements>} refs
+* @returns {void}
+*/
 function closeInstructionsModal(refs) {
     refs.instructionsModal?.classList.add("hidden");
 }

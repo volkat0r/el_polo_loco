@@ -1,6 +1,6 @@
 /**
- * Central image path collection for all game objects.
- */
+* Central image path collection for all game objects.
+*/
 export class ImageHub {
     static character = {
         idle:[
@@ -147,8 +147,6 @@ export class ImageHub {
             "./assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/3_bottle_splash.png",
             "./assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/4_bottle_splash.png",
             "./assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/5_bottle_splash.png",
-
-            
             "./assets/img/6_salsa_bottle/bottle_rotation/bottle_splash/6_bottle_splash.png"
         ],
         bottle_rotation:[
