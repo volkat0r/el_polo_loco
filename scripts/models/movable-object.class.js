@@ -114,7 +114,7 @@ export class MovableObject extends DrawableObject{
         return false;
     }
 
-    /* MovableObject - Collition Calculation */
+    /* Collision checks */
     /**
      * Checks basic rectangle collision.
      * @param {MovableObject} mo
@@ -127,7 +127,7 @@ export class MovableObject extends DrawableObject{
                 this.y < mo.y + mo.height // B > T
     };
 
-    // Offset Collision
+    // Checks collision using hitbox offsets.
     /**
      * Checks collision using object offsets.
      * @param {MovableObject} mo

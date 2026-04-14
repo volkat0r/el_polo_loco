@@ -1,6 +1,7 @@
 import { IntervalHub } from "../intervalhub.class.js";
 import { ImageHub } from "../imagehub.class.js";
 import { SoundHub } from "../soundhub.class.js";
+import { applyCharacterHit, playCharacterDeathAnimation, processCharacterInput, selectCharacterAnimation } from "./character/character-behavior.js";
 import { MovableObject } from "./movable-object.class.js";
 
 /**
@@ -31,6 +32,7 @@ export class Character extends MovableObject{
     lastIdleFrameAt = 0;
     JUMP_FRAME_INTERVAL_MS = 100;
     lastJumpFrameAt = 0;
+    isInLongIdle = false;
 
     // Image Hub
     IMAGES_IDLE = ImageHub.character.idle;
@@ -54,6 +56,17 @@ export class Character extends MovableObject{
         super();
         this.showFrame = false;
         this.showOffsetFrame = false;
+        this.preloadCharacterImages();
+        this.animate();
+        this.applyGravity();
+        this.setCharacterOffset();
+    }
+
+    /**
+     * Preloads all character sprite image groups.
+     * @returns {void}
+     */
+    preloadCharacterImages() {
         this.loadImage(this.IMAGES_WALK[0]);
         this.loadImages(this.IMAGES_IDLE);
         this.loadImages(this.IMAGES_IDLE_LONG);
@@ -61,15 +74,14 @@ export class Character extends MovableObject{
         this.loadImages(this.IMAGES_JUMP);
         this.loadImages(this.IMAGES_HURT);
         this.loadImages(this.IMAGES_DEAD);
-        this.animate();
-        this.applyGravity();
+    }
 
-        this.offset = {
-            left: 40,
-            right: 40,
-            top: 140,
-            bottom: 15
-        };
+    /**
+     * Sets collision offsets for the character.
+     * @returns {void}
+     */
+    setCharacterOffset() {
+        this.offset = { left: 40, right: 40, top: 140, bottom: 15 };
     }
 
     /**
@@ -87,47 +99,17 @@ export class Character extends MovableObject{
      * @returns {void}
      */
     selectAnimation = () => {
-        if (this.isDead()) {
-            SoundHub.stopSingle(this.SOUND_WALK);
-            this.playDeadAnimationOnce();
-            this.updateDeathFall();
-            return;
-        }
+        selectCharacterAnimation(this);
+    }
 
-        const isInAir = this.isAboveGround() || this.speedY > 0;
-
-        if (this.wasJumping && !isInAir) {
-            this.wasJumping = false;
-            SoundHub.stopSingle(this.SOUND_WALK);
-            this.resetWalkAnimationStart();
-            return;
-        } else if (isInAir) {
-            this.wasJumping = true;
-            SoundHub.stopSingle(this.SOUND_WALK);
-            const now = Date.now();
-            if (now - this.lastJumpFrameAt >= this.JUMP_FRAME_INTERVAL_MS) {
-                this.playAnimation(this.IMAGES_JUMP);
-                this.lastJumpFrameAt = now;
-            }
-        } else if (this.isHurt()) {
-            SoundHub.stopSingle(this.SOUND_WALK);
-            this.playAnimation(this.IMAGES_HURT);
-        } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-            if (this.wasJumping) {
-                this.resetWalkAnimationStart();
-                this.wasJumping = false;
-            }
-            this.playAnimation(this.IMAGES_WALK);
-            SoundHub.playLoop(this.SOUND_WALK, 0.1);
-        } else {
-            SoundHub.stopSingle(this.SOUND_WALK);
-            const now = Date.now();
-            if (now - this.lastIdleFrameAt >= this.IDLE_FRAME_INTERVAL_MS) {
-                const idleImages = this.fallAsleep() ? this.IMAGES_IDLE_LONG : this.IMAGES_IDLE;
-                this.playAnimation(idleImages);
-                this.lastIdleFrameAt = now;
-            }
-        }
+    /**
+     * Stops long-idle snore loop and resets its state flag.
+     * @returns {void}
+     */
+    stopLongIdleSnore() {
+        if (!this.isInLongIdle) return;
+        SoundHub.stopSingle(this.SOUND_IDLE);
+        this.isInLongIdle = false;
     }
 
     /**
@@ -145,24 +127,7 @@ export class Character extends MovableObject{
      * @returns {void}
      */
     inputCheck = () => {
-        if (this.isDead()) return;
-
-        if (this.hasInput()) {
-            this.getLastMove();
-        }
-
-        if(this.world.keyboard.RIGHT && this.x < this.getMaxCharacterX()) {
-            this.moveRight();
-            this.otherDirection = false;
-        }
-        if(this.world.keyboard.LEFT && this.x > 0) {
-            this.otherDirection = true;
-            this.moveLeft();
-        }
-        if (this.world.keyboard.UP && !this.isAboveGround()){
-            SoundHub.playOne(this.SOUND_JUMP);
-            this.jump();
-        }
+        processCharacterInput(this);
     }
 
     /**
@@ -216,67 +181,20 @@ export class Character extends MovableObject{
      * @returns {boolean}
      */
     hit(enemy) {
-        if (this.isDead()) {
-            return false;
-        }
-
-        if (this.isHurt()) {
-            return false;
-        }
-
-        this.energy -= 20;
-        if (this.energy < 0) {
-            this.energy = 0;
-        }
-
-        if (this.energy === 0) {
-            SoundHub.playOne(this.SOUND_DEAD);
-        } else {
-            SoundHub.playOne(this.SOUND_HURT);
-        }
-
-        this.lastHit = Date.now();
-        return true;
+        return applyCharacterHit(this, enemy);
     }
 
     /**
-     * needs to be checked again!
-     * Plays the death animation frames once and locks vertical position until
-     * the sequence is complete.
+     * Plays the death animation exactly once and keeps the character at a
+     * fixed y-position until the animation is finished.
      * @returns {void}
      */
     playDeadAnimationOnce() {
-        if (!this.isDying) {
-            this.isDying = true;
-            this.deathAnimationFrame = 0;
-            this.deathAnimationDone = false;
-            this.isFallingAfterDeath = false;
-            this.hasFallenOutOfScreen = false;
-            this.deathStartY = this.y;
-            this.speedY = 0;
-        }
-
-        if (!this.deathAnimationDone && this.deathStartY !== null) {
-            this.y = this.deathStartY;
-        }
-
-        const lastFrameIndex = this.IMAGES_DEAD.length - 1;
-        const frameIndex = Math.min(this.deathAnimationFrame, lastFrameIndex);
-        const framePath = this.IMAGES_DEAD[frameIndex];
-
-        this.img = this.imageCache[framePath];
-
-        if (this.deathAnimationFrame < lastFrameIndex) {
-            this.deathAnimationFrame++;
-            return;
-        }
-
-        this.deathAnimationDone = true;
+        playCharacterDeathAnimation(this);
     }
 
     /**
-     * this needs to be checked again / sometimes images of character are not displaying 
-     * Moves the dead character downward after death animation has finished.
+     * Moves the character down after the death animation has finished.
      * @returns {void}
      */
     updateDeathFall() {

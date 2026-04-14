@@ -46,6 +46,10 @@ header h1 {
     padding-top: 5rem;
 }
 
+.d-none{
+    display: none;
+}
+
 footer {
     padding-bottom: 0.4rem;
 }
@@ -55,7 +59,7 @@ footer {
     width: min(92vw, 720px);
     margin: 0 auto;
 }
-.inter-link{
+.imprint-link{
     font-family: "Chimichanga";
     color: #a0220a;
     font-size: 2rem;
@@ -118,10 +122,10 @@ footer {
     height: auto;
     border-radius: 10px;
     box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-}
 
-.screen-result-image.hidden {
-    display: none;
+    &.hidden{
+        display: none;
+    }
 }
 
 .screen-overlay-actions {
@@ -163,24 +167,23 @@ footer {
     background: transparent;
     cursor: pointer;
     transition: transform 120ms ease;
-}
 
-#screen-home-btn:hover {
-    transform: translateY(-2px);
-}
+    &:hover{
+        transform: translateY(-2px);
+    }
+    &:active{
+        transform: translateY(0);
+    }
 
-#screen-home-btn:active {
-    transform: translateY(0);
-}
+    img{
+        display: block;
+        width: 5rem;
+        height: auto;
+    }
 
-#screen-home-btn img {
-    display: block;
-    width: 5rem;
-    height: auto;
-}
-
-#screen-home-btn.hidden {
-    display: none;
+    &.hidden{
+        display: none;
+    }
 }
 /* #endregion */
 
@@ -218,15 +221,14 @@ footer {
     opacity: 0.6;
     cursor: pointer;
     transition: transform 120ms ease, opacity 120ms ease;
-}
 
-.instructions-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-}
-
-.instructions-btn:active {
-    transform: translateY(0);
+    &:hover{
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+    &:active{
+        transform: translateY(0);
+    }
 }
 
 .fullscreen-btn-wrapper {
@@ -326,19 +328,45 @@ footer {
     background-size: 100%;
     padding: 1rem 3rem;
     color: white;
+    background-repeat: no-repeat;
+}
+
+.instructions .imprint-link {
+    margin-top: 0.9rem;
+    padding: 0.35rem 0.8rem;
+    color: #223c33;
+    font-size: 1.4rem;
+    line-height: 1;
+    text-decoration: none;
+    text-underline-offset: 0.2em;
+    position: relative;
+    z-index: 2;
+    touch-action: manipulation;
 }
 /* #endregion */
 
 /* #region - Imprint */
 #imprint-content {
-    padding: 4rem;
+    padding: clamp(1.8rem, 5vw, 4rem);
     text-align: center;
-    width: 40rem;
+    width: min(40rem, 92vw);
     height: auto;
     background-image: url("./assets/img/wodden-sign.webp");
-    background-size: 100%;
+    background-size: 100% 100%;
+    background-position: center top;
     background-repeat: no-repeat;
     color: white;
+}
+
+html:has(#imprint-content),
+body:has(#imprint-content) {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+body:has(#imprint-content) main {
+    overflow: visible;
+    min-height: auto;
 }
 
 /* #endregion */
@@ -485,6 +513,13 @@ footer {
         padding: 0.8rem 2.4rem;
     }
 
+    .instructions .imprint-link {
+        display: inline-flex;
+        font-size: 1.2rem;
+        margin-top: 0.5rem;
+        padding: 0.25rem 0.5rem;
+    }
+
     .instructions h2 {
         font-size: 2rem;
     }
@@ -508,6 +543,11 @@ footer {
     #screen-text {
         font-size: clamp(0.85rem, 1.8vw, 1rem);
     }
+
+    #imprint-content {
+        width: min(34rem, 94vw);
+        background-size: 100% 100%;
+    }
 }
 
 @media (max-width: 768px) {
@@ -518,7 +558,7 @@ footer {
 
     .instructions {
         width: min(34rem, 96vw);
-        padding: 1rem 2.2rem;
+        padding: 2rem;
     }
 
     .instructions h2 {

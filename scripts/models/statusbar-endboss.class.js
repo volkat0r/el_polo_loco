@@ -33,7 +33,6 @@ export class StatusBarEndboss extends DrawableObject {
         this.setPercentage(this.endboss.energy);
     }
 
-    // position of healthbar (above endboss)
     /**
      * Moves bar above the endboss.
      * @returns {void}

@@ -2,13 +2,11 @@
  * Stores and clears intervals and timeouts globally.
  */
 export class IntervalHub {
-    // saves regirstered Interval-IDS;
     static allIntervals = [];
     static allTimeouts = [];
 
-    // start a new Interval and added new Interval into allIntervall-Array
     /**
-     * Starts an interval and stores its id.
+    * Starts an interval and stores its id.
      * @param {Function} func
      * @param {number} timer
      * @returns {number}
@@ -19,9 +17,8 @@ export class IntervalHub {
         return id;
     }
 
-    // 
     /**
-     * Starts a timeout and stores its id.
+        * Starts a timeout and stores its id.
      * @param {Function} func
      * @param {number} timer
      * @returns {number}
@@ -36,7 +33,6 @@ export class IntervalHub {
         return id;
     }
 
-    // clearing all interval-arrays
     /**
      * Clears all stored intervals and timeouts.
      * @returns {void}

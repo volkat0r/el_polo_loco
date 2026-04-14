@@ -79,10 +79,10 @@ export class ChickenSmall extends MovableObject{
         }, 60);
     }
 
-        /**
-         * Plays chicken death sound.
-         * @returns {void}
-         */
+    /**
+     * Plays the small chicken death sound.
+     * @returns {void}
+     */
     deathSound() {
         SoundHub.play(SoundHub.chicken.dead_small);
     }

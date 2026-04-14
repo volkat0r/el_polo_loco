@@ -80,28 +80,20 @@ export class Endboss extends MovableObject {
      */
     startAnimation() {
         IntervalHub.startInterval(() => {
-            if (this.isDying) {
-                this.playDeadAnimationOnce();
-                return;
-            }
-
-            if (this.isAlerting) {
-                this.playAlertAnimationOnce();
-                return;
-            }
-
-            if (this.isHurt) {
-                this.playHurtAnimationOnce();
-                return;
-            }
-
-            if (this.isTilted) {
-                this.playAnimation(this.ENDBOSS_ATTACK);
-                return;
-            }
-
-            this.playAnimation(this.ENDBOSS_WALK);
+            this.runAnimationTick();
         }, this.DEAD_ANIMATION_INTERVAL_MS);
+    }
+
+    /**
+     * Runs one animation update tick based on current boss state.
+     * @returns {void}
+     */
+    runAnimationTick() {
+        if (this.isDying) return this.playDeadAnimationOnce();
+        if (this.isAlerting) return this.playAlertAnimationOnce();
+        if (this.isHurt) return this.playHurtAnimationOnce();
+        if (this.isTilted) return this.playAnimation(this.ENDBOSS_ATTACK);
+        this.playAnimation(this.ENDBOSS_WALK);
     }
 
     /**
@@ -112,25 +104,41 @@ export class Endboss extends MovableObject {
     hit(damage = 20) {
         if (this.isDying) return;
         if (this.isRecentlyHit()) return;
+        this.markHitState();
+        this.updateAggression();
+        this.applyDamage(damage);
+    }
 
+    /**
+     * Marks temporary hurt state and starts hit cooldown.
+     * @returns {void}
+     */
+    markHitState() {
         this.isHurt = true;
         this.hurtAnimationFrame = 0;
         this.lastHitAt = Date.now();
+    }
 
+    /**
+     * Increases aggression based on hit count.
+     * @returns {void}
+     */
+    updateAggression() {
         this.hitCount++;
-        if (this.hitCount >= 2) {
-            this.isTilted = true;
-        }
+        if (this.hitCount >= 2) this.isTilted = true;
+        if (this.speed < 7) this.speed += 0.5;
+    }
 
-        if (this.speed < 7) {
-            this.speed += 0.5;
-        }
-
+    /**
+     * Applies incoming damage and triggers death when energy reaches zero.
+     * @param {number} damage
+     * @returns {void}
+     */
+    applyDamage(damage) {
         this.energy -= damage;
-        if (this.energy <= 0) {
-            this.energy = 0;
-            this.dead();
-        }
+        if (this.energy > 0) return;
+        this.energy = 0;
+        this.dead();
     }
 
     /**
@@ -225,27 +233,54 @@ export class Endboss extends MovableObject {
      */
     watchingLevel() {
         if (!this.world) return;
+        this.updateDirectionByCharacter();
+        this.moveInsideBounds();
+    }
 
-        if (this.characterIsBehind()) {
-            this.moveDirection *= -1;
-        }
+    /**
+     * Reverses movement direction when character is behind boss.
+     * @returns {void}
+     */
+    updateDirectionByCharacter() {
+        if (!this.characterIsBehind()) return;
+        this.moveDirection *= -1;
+    }
 
+    /**
+     * Moves boss left or right while respecting map bounds.
+     * @returns {void}
+     */
+    moveInsideBounds() {
         if (this.moveDirection < 0) {
-            this.otherDirection = false;
-            this.x -= this.speed;
-            if (this.x <= this.getMinX()) {
-                this.x = this.getMinX();
-                this.moveDirection = 1;
-            }
+            this.moveLeftWithinBounds();
             return;
         }
 
+        this.moveRightWithinBounds();
+    }
+
+    /**
+     * Moves boss to the left and clamps at minimum x.
+     * @returns {void}
+     */
+    moveLeftWithinBounds() {
+        this.otherDirection = false;
+        this.x -= this.speed;
+        if (this.x > this.getMinX()) return;
+        this.x = this.getMinX();
+        this.moveDirection = 1;
+    }
+
+    /**
+     * Moves boss to the right and clamps at maximum x.
+     * @returns {void}
+     */
+    moveRightWithinBounds() {
         this.otherDirection = true;
         this.x += this.speed;
-        if (this.x >= this.getMaxX()) {
-            this.x = this.getMaxX();
-            this.moveDirection = -1;
-        }
+        if (this.x < this.getMaxX()) return;
+        this.x = this.getMaxX();
+        this.moveDirection = -1;
     }
 
     /**
